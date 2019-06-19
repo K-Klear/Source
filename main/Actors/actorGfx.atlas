@@ -1,0 +1,42 @@
+animations {
+  id: "spiderWalk"
+  images {
+    image: "/assets/gfx/spider_idle.png"
+  }
+  images {
+    image: "/assets/gfx/spider_walk.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 4
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "knightWalk"
+  images {
+    image: "/assets/gfx/knight_idle.png"
+  }
+  images {
+    image: "/assets/gfx/knight_walk.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 4
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "knightAttack"
+  images {
+    image: "/assets/gfx/knight_idle.png"
+  }
+  images {
+    image: "/assets/gfx/knight_attack1.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 3
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+margin: 0
+extrude_borders: 2
+inner_padding: 0

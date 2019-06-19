@@ -1,0 +1,12 @@
+images {
+  image: "/assets/gfx/cave.png"
+}
+images {
+  image: "/assets/gfx/cottage.png"
+}
+images {
+  image: "/assets/gfx/surface.png"
+}
+margin: 0
+extrude_borders: 2
+inner_padding: 0
