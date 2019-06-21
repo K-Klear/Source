@@ -6,23 +6,49 @@ local stats = require("main.Actors.actorStats")
 local houses = {}
 
 local function addCottage()
-	table.insert(houses, factory.create("#spawnHouse", vmath.vector3()))
+	local posX = 0
+	local spread = 5
+	for x = 1, spread do
+		posX = posX + math.random(50, 600)
+	end
+	posX = posX / spread
+	local posY = (math.random(869, 879))
+	local posZ = -(((posY - 869) / 100) - 0.1)
+	table.insert(houses, factory.create("#spawnHouse", vmath.vector3(posX, posY, posZ)))
 end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	msg.post("@render:", "use_fixed_projection")
+	msg.post("@render:", "use_fixed_fit_projection")
+	for x = 1, 15 do
+		addCottage()
+	end
 end
 
 function on_input(self, action_id, action)
 	if action_id == hash("touch") and action.pressed then
-		for x = 1, 100 do
-			local y = math.random(0, 7)
-			if math.random() > 0.5 then
-				factory.create("#spawnKnight", vmath.vector3(200, 889 - y * 100, 0.5), nil, stats.knight)
-			else
-				factory.create("#spawnSpider", vmath.vector3(400, 882 - y * 100, 0.5), nil, stats.spider)
-			end
+		if action.y > 850 then
+
+		elseif action.y > 750 then
+
+		elseif action.y > 650 then
+
+		elseif action.y > 550 then
+
+		elseif action.y > 450 then
+
+		elseif action.y > 350 then
+
+		elseif action.y > 250 then
+
+		elseif action.y > 150 then
+
+		end
+		local y = math.random(0, 0)
+		if math.random() > 0.65 then
+			factory.create("#spawnKnight", vmath.vector3(200, 865 - y * 100, 0.5), nil, stats.knight)
+		else
+			factory.create("#spawnSpider", vmath.vector3(400, 865 - y * 100, 0.5), nil, stats.spider)
 		end
 	end
 end

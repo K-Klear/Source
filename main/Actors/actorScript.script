@@ -49,6 +49,7 @@ end
 
 local function die(self, url, property)
 	self.alive = false
+	go.set_position(vmath.vector3(go.get_position().x, go.get_position().y, 0.4))
 	go.cancel_animations(go.get_id(), "position")
 	sprite.play_flipbook("#sprite", "dead")
 	msg.post("#collisionobject", "disable")

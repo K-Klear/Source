@@ -24,7 +24,7 @@ embedded_components {
   position {
     x: 320.0
     y: 800.0
-    z: 0.0
+    z: -1.0
   }
   rotation {
     x: 0.0
@@ -44,7 +44,7 @@ embedded_components {
   position {
     x: 320.0
     y: 700.0
-    z: 0.0
+    z: -1.0
   }
   rotation {
     x: 0.0
@@ -64,7 +64,7 @@ embedded_components {
   position {
     x: 320.0
     y: 600.0
-    z: 0.0
+    z: -1.0
   }
   rotation {
     x: 0.0
@@ -84,7 +84,7 @@ embedded_components {
   position {
     x: 320.0
     y: 500.0
-    z: 0.0
+    z: -1.0
   }
   rotation {
     x: 0.0
@@ -104,7 +104,7 @@ embedded_components {
   position {
     x: 320.0
     y: 400.0
-    z: 0.0
+    z: -1.0
   }
   rotation {
     x: 0.0
@@ -124,7 +124,7 @@ embedded_components {
   position {
     x: 320.0
     y: 300.0
-    z: 0.0
+    z: -1.0
   }
   rotation {
     x: 0.0
@@ -144,7 +144,7 @@ embedded_components {
   position {
     x: 320.0
     y: 200.0
-    z: 0.0
+    z: -1.0
   }
   rotation {
     x: 0.0
@@ -164,7 +164,7 @@ embedded_components {
   position {
     x: 320.0
     y: 900.0
-    z: 0.0
+    z: -1.0
   }
   rotation {
     x: 0.0
