@@ -1,0 +1,80 @@
+go.property("health", 1)
+go.property("attack", 1)
+go.property("attack_speed", 1)
+go.property("alive", true)
+
+local FADE_DELAY = 10
+local FADE_TIME = 3
+local walk = {}
+
+function walk.left(self, url, property)
+	sprite.play_flipbook("#sprite", "walk")
+	sprite.set_hflip("#sprite", true)
+	local speed = math.random(10, 14)
+	go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, 50, go.EASING_LINEAR, speed, 0, walk.right)
+end
+
+function walk.right(self, url, property)
+	sprite.play_flipbook("#sprite", "walk")
+	sprite.set_hflip("#sprite", false)
+	local speed = math.random(10, 14)
+	go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, 550, go.EASING_LINEAR, speed, 0, walk.left)
+end
+
+local function idle(self, url, property)
+	if go.get_position(go.get_id()).x > 320 then
+		walk.left(self, url, property)
+	else
+		walk.right(self, url, property)
+	end
+end
+
+local function attack(self, url, property)
+	if self.alive and self.target then
+		sprite.play_flipbook("#sprite", "attack")
+		msg.post(self.target, hash("take_damage"), {damage = self.attack})
+		timer.delay(self.attack_speed, false, attack)
+	end
+end
+
+local function fight(self, url, property)
+	go.cancel_animations(go.get_id(), "position")
+	if go.get_position(self.target).x > go.get_position().x then
+		sprite.set_hflip("#sprite", false)
+	else
+		sprite.set_hflip("#sprite", true)
+	end
+	attack(self, url, property)
+end
+
+local function die(self, url, property)
+	self.alive = false
+	go.cancel_animations(go.get_id(), "position")
+	sprite.play_flipbook("#sprite", "dead")
+	msg.post("#collisionobject", "disable")
+	timer.delay(FADE_DELAY, false, function(self) go.animate("#sprite", "tint.w", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, FADE_TIME, 0, function(self) go.delete(go.get_id()) end) end)
+end
+
+function init(self)
+	idle(self, url, property)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("trigger_response") then
+		if message.enter then
+			self.target = message.other_id
+			fight(self, url, property)
+		end
+	elseif message_id == hash("take_damage") then
+		self.health = self.health - message.damage
+		if self.health <= 0 then
+			die(self, url, property)
+			msg.post(sender, "target_dead")
+		end
+	elseif message_id == hash("target_dead") then
+		self.target = nil
+		if self.alive then
+			idle(self, url, property)
+		end
+	end
+end
