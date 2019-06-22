@@ -2,17 +2,22 @@ math.randomseed(os.time())
 math.random(); math.random(); math.random()
 
 local ELD = require("main.elderizer")
-local stats = require("main.Actors.actorStats")
+local STATS = require("main.Actors.actorStats")
+local P = require("main.player")
 local houses = {}
+
+local activeLevel = nil
+
+local currentAction = {action = "call", target = "spider"}
 
 local function addCottage()
 	local posX = 0
-	local spread = 5
+	local spread = 3
 	for x = 1, spread do
 		posX = posX + math.random(50, 600)
 	end
 	posX = posX / spread
-	local posY = (math.random(869, 879))
+	local posY = (math.random(879, 889))
 	local posZ = -(((posY - 869) / 100) - 0.1)
 	table.insert(houses, factory.create("#spawnHouse", vmath.vector3(posX, posY, posZ)))
 end
@@ -20,35 +25,85 @@ end
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	msg.post("@render:", "use_fixed_fit_projection")
+	P.name = ELD.elderize("Klear")
+	print(P.name)
 	for x = 1, 15 do
 		addCottage()
 	end
+	timer.delay(1, true, function() P.essence = P.essence + P.rechargeRate; label.set_text("#essence", P.essence) end)
 end
 
-function on_input(self, action_id, action)
-	if action_id == hash("touch") and action.pressed then
-		if action.y > 850 then
+local function getLevel(y)
+	local level
+	if y > 850 then level = 0
+	elseif y > 750 then level = 1
+	elseif y > 650 then level = 2
+	elseif y > 550 then level = 3
+	elseif y > 450 then level = 4
+	elseif y > 350 then level = 5
+	elseif y > 250 then level = 6
+	elseif y > 150 then level = 7
+	end
+	return level
+end
 
-		elseif action.y > 750 then
+local channel = {}
 
-		elseif action.y > 650 then
-
-		elseif action.y > 550 then
-
-		elseif action.y > 450 then
-
-		elseif action.y > 350 then
-
-		elseif action.y > 250 then
-
-		elseif action.y > 150 then
-
-		end
-		local y = math.random(0, 0)
-		if math.random() > 0.65 then
-			factory.create("#spawnKnight", vmath.vector3(200, 865 - y * 100, 0.5), nil, stats.knight)
-		else
-			factory.create("#spawnSpider", vmath.vector3(400, 865 - y * 100, 0.5), nil, stats.spider)
+function channel.done()
+	if currentAction.action == "call" then
+		if currentAction.target == "spider" then
+			factory.create("#spawnSpider", vmath.vector3(200, 880 - activeLevel * 100, 0.5), nil, STATS.spider)
+			P.essence = P.essence - STATS[currentAction.target].channelCost
+			label.set_text("#essence", P.essence)
 		end
 	end
+end
+
+
+function on_input(self, action_id, action)
+	if action_id == hash("touch") and currentAction.action then
+		local level = getLevel(action.y)
+		if action.pressed then
+			activeLevel = level
+			particlefx.play("cursorEffects#"..currentAction.action)
+			if level then
+				particlefx.play("#"..currentAction.action.."AreaCave"..level)
+				channel.timer = timer.delay(STATS[currentAction.target].channelTime, true, channel.done)
+			end
+		elseif action.released then
+			particlefx.stop("cursorEffects#"..currentAction.action)
+			if activeLevel then
+				particlefx.stop("#"..currentAction.action.."AreaCave"..activeLevel)
+				timer.cancel(channel.timer)
+				print("cancelled")
+				activeLevel = nil
+			end
+		else
+			if activeLevel ~= level then
+				if activeLevel then
+					particlefx.stop("#"..currentAction.action.."AreaCave"..activeLevel)
+					timer.cancel(channel.timer)
+					print("cancelled")
+				end
+				activeLevel = level
+				if level then
+					particlefx.play("#"..currentAction.action.."AreaCave"..level)
+					channel.timer = timer.delay(STATS[currentAction.target].channelTime, true, channel.done)
+				end
+			end
+		end
+		go.set_position(vmath.vector3(action.x, action.y, 1), "cursorEffects")
+	end
+		--[[
+		local y = math.random(0, 7)
+		if math.random() > 0.4 then
+			factory.create("#spawnSpider", vmath.vector3(200, 865 - y * 100, 0.5), nil, STATS.spider)
+		else
+			if math.random() > 0.3 then
+				factory.create("#spawnPeasant", vmath.vector3(400, 865 - y * 100, 0.5), nil, STATS.peasant)
+			else
+				factory.create("#spawnKnight", vmath.vector3(400, 865 - y * 100, 0.5), nil, STATS.knight)
+			end
+		end
+		--]]
 end

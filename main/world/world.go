@@ -13,6 +13,141 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "main1"
+  component: "/main/world/GUI/main.gui"
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "callAreaCave1"
+  component: "/main/world/GUI/callArea.particlefx"
+  position {
+    x: 320.0
+    y: 775.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "callAreaCave2"
+  component: "/main/world/GUI/callArea.particlefx"
+  position {
+    x: 320.0
+    y: 675.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "callAreaCave3"
+  component: "/main/world/GUI/callArea.particlefx"
+  position {
+    x: 320.0
+    y: 575.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "callAreaCave4"
+  component: "/main/world/GUI/callArea.particlefx"
+  position {
+    x: 320.0
+    y: 475.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "callAreaCave5"
+  component: "/main/world/GUI/callArea.particlefx"
+  position {
+    x: 320.0
+    y: 375.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "callAreaCave6"
+  component: "/main/world/GUI/callArea.particlefx"
+  position {
+    x: 320.0
+    y: 275.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "callAreaCave7"
+  component: "/main/world/GUI/callArea.particlefx"
+  position {
+    x: 320.0
+    y: 175.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "callAreaCave0"
+  component: "/main/world/GUI/callArea.particlefx"
+  position {
+    x: 320.0
+    y: 875.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "cave1"
   type: "sprite"
@@ -163,7 +298,7 @@ embedded_components {
   ""
   position {
     x: 320.0
-    y: 900.0
+    y: 910.0
     z: -1.0
   }
   rotation {
@@ -218,6 +353,78 @@ embedded_components {
   position {
     x: 0.0
     y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "spawnPeasant"
+  type: "factory"
+  data: "prototype: \"/main/Actors/peasant.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "essence"
+  type: "label"
+  data: "size {\n"
+  "  x: 128.0\n"
+  "  y: 32.0\n"
+  "  z: 0.0\n"
+  "  w: 0.0\n"
+  "}\n"
+  "scale {\n"
+  "  x: 1.0\n"
+  "  y: 1.0\n"
+  "  z: 1.0\n"
+  "  w: 0.0\n"
+  "}\n"
+  "color {\n"
+  "  x: 1.0\n"
+  "  y: 1.0\n"
+  "  z: 1.0\n"
+  "  w: 1.0\n"
+  "}\n"
+  "outline {\n"
+  "  x: 0.0\n"
+  "  y: 0.0\n"
+  "  z: 0.0\n"
+  "  w: 1.0\n"
+  "}\n"
+  "shadow {\n"
+  "  x: 0.0\n"
+  "  y: 0.0\n"
+  "  z: 0.0\n"
+  "  w: 1.0\n"
+  "}\n"
+  "leading: 1.0\n"
+  "tracking: 0.0\n"
+  "pivot: PIVOT_CENTER\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  "line_break: false\n"
+  "text: \"100\"\n"
+  "font: \"/builtins/fonts/system_font.font\"\n"
+  "material: \"/builtins/fonts/label.material\"\n"
+  ""
+  position {
+    x: 320.0
+    y: 80.0
     z: 0.0
   }
   rotation {

@@ -16,14 +16,14 @@ components {
 embedded_components {
   id: "sprite"
   type: "sprite"
-  data: "tile_set: \"/main/Actors/spider.atlas\"\n"
+  data: "tile_set: \"/main/Actors/peasant.atlas\"\n"
   "default_animation: \"idle\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""
   position {
     x: 0.0
-    y: 4.0
+    y: 9.0
     z: 0.0
   }
   rotation {
@@ -41,15 +41,14 @@ embedded_components {
   "mass: 0.0\n"
   "friction: 0.1\n"
   "restitution: 0.5\n"
-  "group: \"dwellers\"\n"
-  "mask: \"heroes\"\n"
-  "mask: \"peasants\"\n"
+  "group: \"peasants\"\n"
+  "mask: \"dwellers\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"
   "    position {\n"
   "      x: 0.0\n"
-  "      y: 10.0\n"
+  "      y: 15.0\n"
   "      z: 0.0\n"
   "    }\n"
   "    rotation {\n"

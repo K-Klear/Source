@@ -1,0 +1,12 @@
+images {
+  image: "/assets/gfx/icons/gold.png"
+}
+images {
+  image: "/assets/gfx/icons/peasant.png"
+}
+images {
+  image: "/assets/gfx/icons/spider.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

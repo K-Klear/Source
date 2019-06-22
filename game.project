@@ -62,6 +62,8 @@ gravity_y = -1000.0
 scale = 0.01
 debug = 0
 max_collisions = 512
+trigger_overlap_capacity = 32
+ray_cast_limit_3d = 128
 
 [graphics]
 default_texture_min_filter = nearest
@@ -75,4 +77,7 @@ max_count = 4096
 [sound]
 max_sound_instances = 256
 max_sound_sources = 16
+
+[collection]
+max_instances = 4096
 

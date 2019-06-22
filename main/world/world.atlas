@@ -1,11 +1,11 @@
 images {
-  image: "/assets/gfx/cave.png"
+  image: "/assets/gfx/world/cave.png"
 }
 images {
-  image: "/assets/gfx/cottage.png"
+  image: "/assets/gfx/world/cottage.png"
 }
 images {
-  image: "/assets/gfx/surface.png"
+  image: "/assets/gfx/world/surface.png"
 }
 margin: 0
 extrude_borders: 2

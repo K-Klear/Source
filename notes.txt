@@ -1,0 +1,32 @@
+Z coords:
+
+Caves/surface: -1
+Houses: 0.01 - 0.1
+Dead actors: 0.4
+Actors: 0.5 - 0.6
+
+
+Credits:
+
+Gold icons: https://opengameart.org/content/gold-treasure-icons
+
+
+
+Gameplay:
+
+Power increases over time.
+
+Player actions:
+
+Empower:
+- Create Boss
+- Create artifact
+
+Call:
+- Attract denizen type
+
+Agitate:
+- Make denizens more aggresive
+
+Corrupt:
+- Increase effectiveness of other actions

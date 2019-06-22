@@ -7,7 +7,14 @@ local M = {
 	spider = {
 		health = 6,
 		attack = 3,
-		attack_speed = 0.6
+		attack_speed = 0.6,
+		channelTime = 2,
+		channelCost = 10
+	},
+	peasant = {
+		health = 4,
+		attack = 1,
+		attack_speed = 2
 	}
 }
 
