@@ -75,7 +75,6 @@ function on_input(self, action_id, action)
 			if activeLevel then
 				particlefx.stop("#"..currentAction.action.."AreaCave"..activeLevel)
 				timer.cancel(channel.timer)
-				print("cancelled")
 				activeLevel = nil
 			end
 		else
@@ -83,7 +82,6 @@ function on_input(self, action_id, action)
 				if activeLevel then
 					particlefx.stop("#"..currentAction.action.."AreaCave"..activeLevel)
 					timer.cancel(channel.timer)
-					print("cancelled")
 				end
 				activeLevel = level
 				if level then
@@ -94,16 +92,4 @@ function on_input(self, action_id, action)
 		end
 		go.set_position(vmath.vector3(action.x, action.y, 1), "cursorEffects")
 	end
-		--[[
-		local y = math.random(0, 7)
-		if math.random() > 0.4 then
-			factory.create("#spawnSpider", vmath.vector3(200, 865 - y * 100, 0.5), nil, STATS.spider)
-		else
-			if math.random() > 0.3 then
-				factory.create("#spawnPeasant", vmath.vector3(400, 865 - y * 100, 0.5), nil, STATS.peasant)
-			else
-				factory.create("#spawnKnight", vmath.vector3(400, 865 - y * 100, 0.5), nil, STATS.knight)
-			end
-		end
-		--]]
 end
