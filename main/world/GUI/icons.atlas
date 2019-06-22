@@ -7,6 +7,42 @@ images {
 images {
   image: "/assets/gfx/icons/spider.png"
 }
+images {
+  image: "/assets/gfx/icons/agitate.png"
+}
+images {
+  image: "/assets/gfx/icons/call.png"
+}
+images {
+  image: "/assets/gfx/icons/corrupt.png"
+}
+images {
+  image: "/assets/gfx/icons/empower.png"
+}
+images {
+  image: "/assets/gfx/icons/agitate_highlight.png"
+}
+images {
+  image: "/assets/gfx/icons/agitate_pressed.png"
+}
+images {
+  image: "/assets/gfx/icons/call_highlight.png"
+}
+images {
+  image: "/assets/gfx/icons/call_pressed.png"
+}
+images {
+  image: "/assets/gfx/icons/corrupt_highlight.png"
+}
+images {
+  image: "/assets/gfx/icons/corrupt_pressed.png"
+}
+images {
+  image: "/assets/gfx/icons/empower_highlight.png"
+}
+images {
+  image: "/assets/gfx/icons/empower_pressed.png"
+}
 margin: 0
 extrude_borders: 0
 inner_padding: 0

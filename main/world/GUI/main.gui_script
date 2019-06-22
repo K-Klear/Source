@@ -1,14 +1,49 @@
+local buttons = {}
+local highlight
+local selection
+
 function init(self)
-
+	buttons.call = gui.new_box_node(vmath.vector3(82, 82, 0), vmath.vector3(64, 64, 0))
+	gui.set_texture(buttons.call, "icons")
+	gui.play_flipbook(buttons.call, "call")
+	buttons.empower = gui.new_box_node(vmath.vector3(178, 82, 0), vmath.vector3(64, 64, 0))
+	gui.set_texture(buttons.empower, "icons")
+	gui.play_flipbook(buttons.empower, "empower")
+	buttons.agitate = gui.new_box_node(vmath.vector3(274, 82, 0), vmath.vector3(64, 64, 0))
+	gui.set_texture(buttons.agitate, "icons")
+	gui.play_flipbook(buttons.agitate, "agitate")
+	buttons.corrupt = gui.new_box_node(vmath.vector3(370, 82, 0), vmath.vector3(64, 64, 0))
+	gui.set_texture(buttons.corrupt, "icons")
+	gui.play_flipbook(buttons.corrupt, "corrupt")
 end
 
 
-function on_message(self, message_id, message, sender)
-	
-end
+
 
 function on_input(self, action_id, action)
-	if action_id == hash("touch") then
-
+	if not action_id then
+		local _button = true
+		for key, val in pairs(buttons) do
+			if gui.pick_node(val, action.x, action.y) and key ~= selection then
+				if highlight then gui.play_flipbook(buttons[highlight], highlight) end
+				gui.play_flipbook(val, key.."_highlight")
+				highlight = key
+				_button = false
+			end
+		end
+		if _button and highlight then gui.play_flipbook(buttons[highlight], highlight) end
+	elseif action_id == hash("touch") and action.pressed then
+		for key, val in pairs(buttons) do
+			if gui.pick_node(val, action.x, action.y) then
+				if selection then gui.play_flipbook(buttons[selection], selection) end
+				gui.play_flipbook(val, key.."_pressed")
+				selection = key
+				highlight = nil
+				msg.post(".", "setAction", {action = key})
+			end
+		end
 	end
 end
+
+
+

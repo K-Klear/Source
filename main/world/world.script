@@ -93,3 +93,10 @@ function on_input(self, action_id, action)
 		go.set_position(vmath.vector3(action.x, action.y, 1), "cursorEffects")
 	end
 end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("setAction") then
+		particlefx.stop("cursorEffects#"..currentAction.action)
+		currentAction = {action = message.action, target = "spider"}
+	end
+end

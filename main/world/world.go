@@ -148,6 +148,366 @@ components {
     w: 1.0
   }
 }
+components {
+  id: "empowerAreaCave0"
+  component: "/main/world/GUI/empowerArea.particlefx"
+  position {
+    x: 320.0
+    y: 875.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "empowerAreaCave1"
+  component: "/main/world/GUI/empowerArea.particlefx"
+  position {
+    x: 320.0
+    y: 775.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "empowerAreaCave2"
+  component: "/main/world/GUI/empowerArea.particlefx"
+  position {
+    x: 320.0
+    y: 675.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "empowerAreaCave3"
+  component: "/main/world/GUI/empowerArea.particlefx"
+  position {
+    x: 320.0
+    y: 575.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "empowerAreaCave4"
+  component: "/main/world/GUI/empowerArea.particlefx"
+  position {
+    x: 320.0
+    y: 475.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "empowerAreaCave5"
+  component: "/main/world/GUI/empowerArea.particlefx"
+  position {
+    x: 320.0
+    y: 375.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "empowerAreaCave6"
+  component: "/main/world/GUI/empowerArea.particlefx"
+  position {
+    x: 320.0
+    y: 275.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "empowerAreaCave7"
+  component: "/main/world/GUI/empowerArea.particlefx"
+  position {
+    x: 320.0
+    y: 175.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "corruptAreaCave0"
+  component: "/main/world/GUI/corruptArea.particlefx"
+  position {
+    x: 320.0
+    y: 875.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "corruptAreaCave1"
+  component: "/main/world/GUI/corruptArea.particlefx"
+  position {
+    x: 320.0
+    y: 775.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "corruptAreaCave2"
+  component: "/main/world/GUI/corruptArea.particlefx"
+  position {
+    x: 320.0
+    y: 675.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "corruptAreaCave3"
+  component: "/main/world/GUI/corruptArea.particlefx"
+  position {
+    x: 320.0
+    y: 575.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "corruptAreaCave4"
+  component: "/main/world/GUI/corruptArea.particlefx"
+  position {
+    x: 320.0
+    y: 475.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "corruptAreaCave5"
+  component: "/main/world/GUI/corruptArea.particlefx"
+  position {
+    x: 320.0
+    y: 375.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "corruptAreaCave6"
+  component: "/main/world/GUI/corruptArea.particlefx"
+  position {
+    x: 320.0
+    y: 275.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "corruptAreaCave7"
+  component: "/main/world/GUI/corruptArea.particlefx"
+  position {
+    x: 320.0
+    y: 175.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "agitateAreaCave0"
+  component: "/main/world/GUI/agitateArea.particlefx"
+  position {
+    x: 320.0
+    y: 875.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "agitateAreaCave1"
+  component: "/main/world/GUI/agitateArea.particlefx"
+  position {
+    x: 320.0
+    y: 775.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "agitateAreaCave2"
+  component: "/main/world/GUI/agitateArea.particlefx"
+  position {
+    x: 320.0
+    y: 675.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "agitateAreaCave3"
+  component: "/main/world/GUI/agitateArea.particlefx"
+  position {
+    x: 320.0
+    y: 575.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "agitateAreaCave4"
+  component: "/main/world/GUI/agitateArea.particlefx"
+  position {
+    x: 320.0
+    y: 475.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "agitateAreaCave5"
+  component: "/main/world/GUI/agitateArea.particlefx"
+  position {
+    x: 320.0
+    y: 375.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "agitateAreaCave6"
+  component: "/main/world/GUI/agitateArea.particlefx"
+  position {
+    x: 320.0
+    y: 275.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+components {
+  id: "agitateAreaCave7"
+  component: "/main/world/GUI/agitateArea.particlefx"
+  position {
+    x: 320.0
+    y: 175.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
 embedded_components {
   id: "cave1"
   type: "sprite"
