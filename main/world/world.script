@@ -52,7 +52,8 @@ local channel = {}
 function channel.done()
 	if currentAction.action == "call" then
 		if currentAction.target == "spider" then
-			factory.create("#spawnSpider", vmath.vector3(200, 880 - activeLevel * 100, 0.5), nil, STATS.spider)
+			factory.create("#spawnGoblin", vmath.vector3(400, 880 - activeLevel * 100, 0.5), nil, STATS.goblin)
+			factory.create("#spawnKnight", vmath.vector3(200, 880 - activeLevel * 100, 0.5), nil, STATS.knight)
 			P.essence = P.essence - STATS[currentAction.target].channelCost
 			label.set_text("#essence", P.essence)
 		end
@@ -67,25 +68,25 @@ function on_input(self, action_id, action)
 			activeLevel = level
 			particlefx.play("cursorEffects#"..currentAction.action)
 			if level then
-				particlefx.play("#"..currentAction.action.."AreaCave"..level)
+				particlefx.play("fx#"..currentAction.action.."AreaCave"..level)
 				channel.timer = timer.delay(STATS[currentAction.target].channelTime, true, channel.done)
 			end
 		elseif action.released then
 			particlefx.stop("cursorEffects#"..currentAction.action)
 			if activeLevel then
-				particlefx.stop("#"..currentAction.action.."AreaCave"..activeLevel)
+				particlefx.stop("fx#"..currentAction.action.."AreaCave"..activeLevel)
 				timer.cancel(channel.timer)
 				activeLevel = nil
 			end
 		else
 			if activeLevel ~= level then
 				if activeLevel then
-					particlefx.stop("#"..currentAction.action.."AreaCave"..activeLevel)
+					particlefx.stop("fx#"..currentAction.action.."AreaCave"..activeLevel)
 					timer.cancel(channel.timer)
 				end
 				activeLevel = level
 				if level then
-					particlefx.play("#"..currentAction.action.."AreaCave"..level)
+					particlefx.play("fx#"..currentAction.action.."AreaCave"..level)
 					channel.timer = timer.delay(STATS[currentAction.target].channelTime, true, channel.done)
 				end
 			end
