@@ -1,53 +1,69 @@
 go.property("health", 1)
 go.property("attack", 1)
 go.property("attack_speed", 1)
+go.property("speed", 1)
 go.property("alive", true)
+go.property("orders", hash("patrol"))
+go.property("type", hash("hero"))
 
 local FADE_DELAY = 10
 local FADE_TIME = 3
-local walk = {}
 
-function walk.left(self, url, property)
+local idle
+local exit = {40, 620, 40, 620, 40, 620, 40}
+exit[0] = 620
+
+local function walk(self, X)
+	local currentX = go.get_position().x
 	sprite.play_flipbook("#sprite", "walk")
-	sprite.set_hflip("#sprite", true)
-	local speed = math.random(10, 14)
-	go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, 50, go.EASING_LINEAR, speed, 0, walk.right)
+	sprite.set_hflip("#sprite", X < currentX)
+	go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, X, go.EASING_LINEAR, math.abs(currentX - X) / self.speed, 0, idle)
+	self.action = hash("walk")
 end
 
-function walk.right(self, url, property)
-	sprite.play_flipbook("#sprite", "walk")
-	sprite.set_hflip("#sprite", false)
-	local speed = math.random(10, 14)
-	go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, 550, go.EASING_LINEAR, speed, 0, walk.left)
-end
-
-local function idle(self, url, property)
-	if go.get_position(go.get_id()).x > 320 then
-		walk.left(self, url, property)
-	else
-		walk.right(self, url, property)
+function idle(self)
+	if self.orders == hash("patrol") then
+		if go.get_position().x > 320 then
+			walk(self, 40)
+		else
+			walk(self, 620)
+		end
+	elseif self.orders == hash("explore") then
+		local currentX = go.get_position().x
+		if currentX == exit[self.level] then
+			self.level = self.level + 1
+			local pos = go.get_position()
+			pos.y = pos.y - 100
+			go.set_position(pos)
+			walk(self, exit[self.level])
+		else
+			walk(self, exit[self.level])
+		end
 	end
 end
 
-local function attack(self, url, property)
-	if self.alive and self.target then
+local function attack(self)
+	if self.alive and #self.target > 0 then
 		sprite.play_flipbook("#sprite", "attack")
-		msg.post(self.target, hash("take_damage"), {damage = self.attack})
+		msg.post(self.target[1], hash("take_damage"), {damage = self.attack})
 		timer.delay(self.attack_speed, false, attack)
+	elseif self.alive and #self.target == 0 then
+		idle(self)
 	end
 end
 
-local function fight(self, url, property)
+local function fight(self)
 	go.cancel_animations(go.get_id(), "position")
-	if go.get_position(self.target).x > go.get_position().x then
+	if go.get_position(self.target[1]).x > go.get_position().x then
 		sprite.set_hflip("#sprite", false)
 	else
 		sprite.set_hflip("#sprite", true)
 	end
-	attack(self, url, property)
+	self.action = hash("fight")
+	attack(self)
 end
 
-local function die(self, url, property)
+local function die(self)
 	self.alive = false
 	go.set_position(vmath.vector3(go.get_position().x, go.get_position().y, 0.4))
 	go.cancel_animations(go.get_id(), "position")
@@ -57,26 +73,55 @@ local function die(self, url, property)
 	timer.delay(FADE_DELAY, false, function(self) go.animate("#sprite", "tint.w", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, FADE_TIME, 0, function(self) go.delete(go.get_id()) end) end)
 end
 
+local function getLevel(y)
+	local level
+	if y > 850 then level = 0
+	elseif y > 750 then level = 1
+	elseif y > 650 then level = 2
+	elseif y > 550 then level = 3
+	elseif y > 450 then level = 4
+	elseif y > 350 then level = 5
+	elseif y > 250 then level = 6
+	elseif y > 150 then level = 7
+	end
+	return level
+end
+
 function init(self)
-	idle(self, url, property)
+	self.level = getLevel(go.get_position(go.get_id()).y)
+	self.kills = {}
+	self.target = {}
+	idle(self)
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("trigger_response") then
 		if message.enter then
-			self.target = message.other_id
-			fight(self, url, property)
+			table.insert(self.target, message.other_id)
+			if self.action ~= hash("fight") then fight(self) end
+		elseif message.exit then
+			for key, val in ipairs(self.target) do
+				if val == sender.path then
+					table.remove(self.target, key)
+					break
+				end
+			end
 		end
 	elseif message_id == hash("take_damage") then
+		print(self.type)
 		self.health = self.health - message.damage
 		if self.health <= 0 then
-			die(self, url, property)
-			msg.post(sender, "target_dead")
+			die(self)
+			msg.post(sender, "target_dead", {type = self.type})
 		end
 	elseif message_id == hash("target_dead") then
-		self.target = nil
-		if self.alive then
-			idle(self, url, property)
+		for key, val in ipairs(self.target) do
+			if val == sender.path then
+				table.remove(self.target, key)
+				break
+			end
 		end
+		self.kills[message.type] = self.kills[message.type] or 0
+		self.kills[message.type] = self.kills[message.type] + 1 
 	end
 end

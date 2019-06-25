@@ -2,8 +2,10 @@ Z coords:
 
 Caves/surface: -1
 Houses: 0.01 - 0.1
+Cave back: 0.3
 Dead actors: 0.4
 Actors: 0.5 - 0.6
+Cave front: 0.7
 
 Credits:
 

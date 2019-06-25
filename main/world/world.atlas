@@ -7,6 +7,12 @@ images {
 images {
   image: "/assets/gfx/world/surface.png"
 }
+images {
+  image: "/assets/gfx/world/cave_back.png"
+}
+images {
+  image: "/assets/gfx/world/cave_front.png"
+}
 margin: 0
 extrude_borders: 2
 inner_padding: 0

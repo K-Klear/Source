@@ -353,3 +353,43 @@ embedded_components {
     w: 1.0
   }
 }
+embedded_components {
+  id: "cave_back"
+  type: "sprite"
+  data: "tile_set: \"/main/world/world.atlas\"\n"
+  "default_animation: \"cave_back\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 612.0
+    y: 894.0
+    z: 0.3
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "cave_front"
+  type: "sprite"
+  data: "tile_set: \"/main/world/world.atlas\"\n"
+  "default_animation: \"cave_front\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 612.0
+    y: 894.0
+    z: 0.7
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}

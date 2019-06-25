@@ -61,7 +61,7 @@ embedded_components {
   "    index: 0\n"
   "    count: 3\n"
   "  }\n"
-  "  data: 10.0\n"
+  "  data: 9.294\n"
   "  data: 25.0\n"
   "  data: 10.0\n"
   "}\n"

@@ -6,6 +6,7 @@ local STATS = require("main.Actors.actorStats")
 local P = require("main.player")
 local houses = {}
 local dwellers = {}
+local heroes = {}
 local dwellersList = {"spider", "goblin"}
 
 local activeLevel = nil
@@ -24,6 +25,12 @@ local function addCottage()
 	table.insert(houses, factory.create("#spawn_house", vmath.vector3(posX, posY, posZ)))
 end
 
+local hero = {}
+
+function hero.spawn(level)
+	table.insert(heroes, factory.create("#spawn_knight", vmath.vector3(550, 880, 0.5), nil, STATS.knight))
+end
+
 function init(self)
 	msg.post(".", "acquire_input_focus")
 	msg.post("@render:", "use_fixed_fit_projection")
@@ -33,6 +40,8 @@ function init(self)
 		addCottage()
 	end
 	timer.delay(1, true, function() P.essence = P.essence + P.rechargeRate; label.set_text("#essence", P.essence) end)
+	--timer.delay(5, true, function() hero.spawn(1) end)
+	hero.spawn(1)
 end
 
 local function getLevel(y)
@@ -99,7 +108,7 @@ end
 
 function channel.done()
 	if currentAction.action == "call" then
-		table.insert(dwellers, {go = factory.create("#spawn_"..currentAction.target, vmath.vector3(400, 880 - activeLevel * 100, 0.5), nil, STATS[currentAction.target]), type = currentAction.target, level = activeLevel})
+		table.insert(dwellers, {go = factory.create("#spawn_"..currentAction.target, vmath.vector3(300, 880 - activeLevel * 100, 0.5), nil, STATS[currentAction.target]), type = currentAction.target, level = activeLevel})
 		P.essence = P.essence - STATS[currentAction.target].callCost
 		label.set_text("#essence", P.essence)
 	elseif currentAction.action == "empower" then
