@@ -13,21 +13,6 @@ components {
     w: 1.0
   }
 }
-components {
-  id: "main1"
-  component: "/main/world/GUI/main.gui"
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
 embedded_components {
   id: "cave1"
   type: "sprite"
@@ -189,7 +174,7 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "spawnKnight"
+  id: "spawn_knight"
   type: "factory"
   data: "prototype: \"/main/Actors/knight.go\"\n"
   "load_dynamically: false\n"
@@ -207,7 +192,7 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "spawnSpider"
+  id: "spawn_spider"
   type: "factory"
   data: "prototype: \"/main/Actors/spider.go\"\n"
   "load_dynamically: false\n"
@@ -225,7 +210,7 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "spawnHouse"
+  id: "spawn_house"
   type: "factory"
   data: "prototype: \"/main/world/house.go\"\n"
   "load_dynamically: false\n"
@@ -243,7 +228,7 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "spawnPeasant"
+  id: "spawn_peasant"
   type: "factory"
   data: "prototype: \"/main/Actors/peasant.go\"\n"
   "load_dynamically: false\n"
@@ -315,9 +300,45 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "spawnGoblin"
+  id: "spawn_goblin"
   type: "factory"
   data: "prototype: \"/main/Actors/goblin.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "spawn_spider_boss"
+  type: "factory"
+  data: "prototype: \"/main/Actors/spider_boss.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "spawn_goblin_boss"
+  type: "factory"
+  data: "prototype: \"/main/Actors/goblin_boss.go\"\n"
   "load_dynamically: false\n"
   ""
   position {

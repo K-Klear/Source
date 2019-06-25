@@ -5,16 +5,12 @@ Houses: 0.01 - 0.1
 Dead actors: 0.4
 Actors: 0.5 - 0.6
 
-
 Credits:
 
 Gold icons: https://opengameart.org/content/gold-treasure-icons
 
 
-
 Gameplay:
-
-Power increases over time.
 
 Player actions:
 
@@ -30,3 +26,11 @@ Agitate:
 
 Corrupt:
 - Increase effectiveness of other actions
+
+Adding a new Dweller type workflow:
+- Create graphics + boss graphics
+- Create atlases
+- Add spawner to world.go
+- Add stats to actorStats.lua
+- Add icon to call gui
+- Add it to the dwellerList variable

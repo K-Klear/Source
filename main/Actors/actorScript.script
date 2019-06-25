@@ -53,6 +53,7 @@ local function die(self, url, property)
 	go.cancel_animations(go.get_id(), "position")
 	sprite.play_flipbook("#sprite", "dead")
 	msg.post("#collisionobject", "disable")
+	msg.post("/world", "removeDweller")
 	timer.delay(FADE_DELAY, false, function(self) go.animate("#sprite", "tint.w", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, FADE_TIME, 0, function(self) go.delete(go.get_id()) end) end)
 end
 

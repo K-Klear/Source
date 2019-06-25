@@ -5,6 +5,8 @@ local ELD = require("main.elderizer")
 local STATS = require("main.Actors.actorStats")
 local P = require("main.player")
 local houses = {}
+local dwellers = {}
+local dwellersList = {"spider", "goblin"}
 
 local activeLevel = nil
 
@@ -19,7 +21,7 @@ local function addCottage()
 	posX = posX / spread
 	local posY = (math.random(879, 889))
 	local posZ = -(((posY - 869) / 100) - 0.1)
-	table.insert(houses, factory.create("#spawnHouse", vmath.vector3(posX, posY, posZ)))
+	table.insert(houses, factory.create("#spawn_house", vmath.vector3(posX, posY, posZ)))
 end
 
 function init(self)
@@ -48,14 +50,65 @@ local function getLevel(y)
 end
 
 local channel = {}
+local dweller = {}
+
+function dweller.count(level, type)
+	local count = 0
+	for key, val in ipairs(dwellers) do
+		if val.type == type and val.level == level then
+			count = count + 1
+		end
+	end
+	return count
+end
+
+function dweller.most(level)
+	local bestCount = 0
+	local best
+	for key, val in ipairs(dwellersList) do
+		local count = dweller.count(level, val)
+		if count > bestCount then
+			best = val; bestCount = count
+		end
+	end
+	return best
+end
+
+function dweller.empowerable(level)
+	local bestCount = 0
+	local best
+	for key, val in ipairs(dwellersList) do
+		local count = dweller.count(level, val)
+		if count > bestCount and dweller.count(level, val.."_boss") == 0 then
+			best = val; bestCount = count
+		end
+	end
+	return best
+end
+
+function dweller.closest(type, level)
+	local closest
+	local distance = 1/0
+	for key, val in ipairs(dwellers) do
+		if val.level == level and val.type == type and math.abs(go.get_position(val.go).x - go.get_position("cursorEffects").x) < distance then
+			closest = key; distance = math.abs(go.get_position(val.go).x - go.get_position("cursorEffects").x)
+		end
+	end
+	return closest
+end
 
 function channel.done()
 	if currentAction.action == "call" then
-		if currentAction.target == "spider" then
-			factory.create("#spawnGoblin", vmath.vector3(400, 880 - activeLevel * 100, 0.5), nil, STATS.goblin)
-			factory.create("#spawnKnight", vmath.vector3(200, 880 - activeLevel * 100, 0.5), nil, STATS.knight)
-			P.essence = P.essence - STATS[currentAction.target].channelCost
-			label.set_text("#essence", P.essence)
+		table.insert(dwellers, {go = factory.create("#spawn_"..currentAction.target, vmath.vector3(400, 880 - activeLevel * 100, 0.5), nil, STATS[currentAction.target]), type = currentAction.target, level = activeLevel})
+		P.essence = P.essence - STATS[currentAction.target].callCost
+		label.set_text("#essence", P.essence)
+	elseif currentAction.action == "empower" then
+		local target = dweller.empowerable(activeLevel)
+		if target then
+			local newBoss = dweller.closest(target, activeLevel)
+			local newGO = {go = factory.create("#spawn_"..target.."_boss", go.get_position(dwellers[newBoss].go), nil, STATS[target.."_boss"]), type = target.."_boss", level = activeLevel}
+			go.delete(dwellers[newBoss].go, true)
+			dwellers[newBoss] = newGO
 		end
 	end
 end
@@ -69,25 +122,39 @@ function on_input(self, action_id, action)
 			particlefx.play("cursorEffects#"..currentAction.action)
 			if level then
 				particlefx.play("fx#"..currentAction.action.."AreaCave"..level)
-				channel.timer = timer.delay(STATS[currentAction.target].channelTime, true, channel.done)
+				if currentAction.action == "call" then
+					channel.timer = timer.delay(STATS[currentAction.target].callTime, true, channel.done)				
+				elseif currentAction.action == "empower" then
+					local target = dweller.empowerable(level)
+					if target then 
+						channel.timer = timer.delay(STATS[target].empowerTime, true, channel.done)
+					end
+				end
 			end
 		elseif action.released then
 			particlefx.stop("cursorEffects#"..currentAction.action)
 			if activeLevel then
 				particlefx.stop("fx#"..currentAction.action.."AreaCave"..activeLevel)
-				timer.cancel(channel.timer)
+				if channel.timer then timer.cancel(channel.timer) end
 				activeLevel = nil
 			end
 		else
 			if activeLevel ~= level then
 				if activeLevel then
 					particlefx.stop("fx#"..currentAction.action.."AreaCave"..activeLevel)
-					timer.cancel(channel.timer)
+					if channel.timer then timer.cancel(channel.timer) end
 				end
 				activeLevel = level
 				if level then
 					particlefx.play("fx#"..currentAction.action.."AreaCave"..level)
-					channel.timer = timer.delay(STATS[currentAction.target].channelTime, true, channel.done)
+					if currentAction.action == "call" then
+						channel.timer = timer.delay(STATS[currentAction.target].callTime, true, channel.done)				
+					elseif currentAction.action == "empower" then
+						local target = dweller.empowerable(level)
+						if target then 
+							channel.timer = timer.delay(STATS[target].empowerTime, true, channel.done)
+						end
+					end
 				end
 			end
 		end
@@ -98,6 +165,13 @@ end
 function on_message(self, message_id, message, sender)
 	if message_id == hash("setAction") then
 		particlefx.stop("cursorEffects#"..currentAction.action)
-		currentAction = {action = message.action, target = "spider"}
+		currentAction = {action = message.action, target = message.target}
+	elseif message_id == hash("removeDweller") then
+		for key, val in ipairs(dwellers) do
+			if val.go == sender.path then
+				table.remove(dwellers, key)
+				break
+			end
+		end
 	end
 end

@@ -1,8 +1,12 @@
 local buttons = {}
 local highlight
 local selection
+local focus = "main"
+
+local dialog = {}
 
 function init(self)
+	msg.post(".","acquire_input_focus")
 	buttons.call = gui.new_box_node(vmath.vector3(110, 82, 0), vmath.vector3(64, 64, 0))
 	gui.set_texture(buttons.call, "icons")
 	gui.play_flipbook(buttons.call, "call")
@@ -15,29 +19,62 @@ function init(self)
 	buttons.corrupt = gui.new_box_node(vmath.vector3(530, 82, 0), vmath.vector3(64, 64, 0))
 	gui.set_texture(buttons.corrupt, "icons")
 	gui.play_flipbook(buttons.corrupt, "corrupt")
+	dialog.callPick = {
+		frame = gui.new_box_node(vmath.vector3(320, 480, 0), vmath.vector3(256, 256, 0)),
+		btn = {
+			spider = gui.new_box_node(vmath.vector3(-128, 128, 0), vmath.vector3(64, 64, 0)),
+			goblin = gui.new_box_node(vmath.vector3(-64, 128, 0), vmath.vector3(64, 64, 0)),
+		}
+	}
+	for key, val in pairs(dialog.callPick.btn) do
+		gui.set_parent(val, dialog.callPick.frame, false)
+		gui.set_pivot(val, gui.PIVOT_NW)
+		gui.set_texture(val, "icons")
+		gui.play_flipbook(val, key)
+	end
+	gui.set_color(dialog.callPick.frame, vmath.vector4(0.2, 0.2, 0.2, 0.7))
+	gui.set_enabled(dialog.callPick.frame, false)
 end
 
 
 function on_input(self, action_id, action)
-	if not action_id then
-		local _button = true
-		for key, val in pairs(buttons) do
-			if gui.pick_node(val, action.x, action.y) and key ~= selection then
-				if highlight then gui.play_flipbook(buttons[highlight], highlight) end
-				gui.play_flipbook(val, key.."_highlight")
-				highlight = key
-				_button = false
+	if focus == "main" then
+		if not action_id then
+			local _button = true
+			for key, val in pairs(buttons) do
+				if gui.pick_node(val, action.x, action.y) and key ~= selection then
+					if highlight then gui.play_flipbook(buttons[highlight], highlight) end
+					gui.play_flipbook(val, key.."_highlight")
+					highlight = key
+					_button = false
+				end
+			end
+			if _button and highlight then gui.play_flipbook(buttons[highlight], highlight) end
+		elseif action_id == hash("touch") and action.pressed then
+			for key, val in pairs(buttons) do
+				if gui.pick_node(val, action.x, action.y) then
+					if selection then gui.play_flipbook(buttons[selection], selection) end
+					gui.play_flipbook(val, key.."_pressed")
+					selection = key
+					highlight = nil
+					msg.post("/world", "setAction", {action = key})
+					if key == "call" then
+						focus = "callPick"
+						gui.set_enabled(dialog.callPick.frame, true)
+						msg.post("/world", "release_input_focus")
+					end
+				end
 			end
 		end
-		if _button and highlight then gui.play_flipbook(buttons[highlight], highlight) end
-	elseif action_id == hash("touch") and action.pressed then
-		for key, val in pairs(buttons) do
-			if gui.pick_node(val, action.x, action.y) then
-				if selection then gui.play_flipbook(buttons[selection], selection) end
-				gui.play_flipbook(val, key.."_pressed")
-				selection = key
-				highlight = nil
-				msg.post(".", "setAction", {action = key})
+	elseif focus == "callPick" then
+		if action_id == hash("touch") and action.pressed then
+			for key, val in pairs(dialog.callPick.btn) do
+				if gui.pick_node(val, action.x, action.y) then
+					msg.post("/world", "setAction", {action = "call", target = key})
+					focus = "main"
+					gui.set_enabled(dialog.callPick.frame, false)
+					msg.post("/world", "acquire_input_focus")
+				end
 			end
 		end
 	end

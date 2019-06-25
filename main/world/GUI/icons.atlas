@@ -5,9 +5,6 @@ images {
   image: "/assets/gfx/icons/peasant.png"
 }
 images {
-  image: "/assets/gfx/icons/spider.png"
-}
-images {
   image: "/assets/gfx/icons/agitate.png"
 }
 images {
@@ -42,6 +39,12 @@ images {
 }
 images {
   image: "/assets/gfx/icons/empower_pressed.png"
+}
+images {
+  image: "/assets/gfx/icons/dwellers/goblin.png"
+}
+images {
+  image: "/assets/gfx/icons/dwellers/spider.png"
 }
 margin: 0
 extrude_borders: 0

@@ -8,8 +8,15 @@ local M = {
 		health = 6,
 		attack = 3,
 		attack_speed = 0.6,
-		channelTime = 0.5,
-		channelCost = 10
+		callTime = 0.5,
+		callCost = 10,
+		empowerTime = 2,
+		empowerCost = 25
+	},
+	spider_boss = {
+		health = 100,
+		attack = 12,
+		attack_speed = 1.2,
 	},
 	peasant = {
 		health = 4,
@@ -20,9 +27,16 @@ local M = {
 		health = 8,
 		attack = 4,
 		attack_speed = 0.8,
-		channelTime = 1,
-		channelCost = 15
+		callTime = 1,
+		callCost = 15,
+		empowerTime = 3,
+		empowerCost = 35
 	},
+	goblin_boss = {
+		health = 80,
+		attack = 10,
+		attack_speed = 0.9
+	}
 }
 
 return M
