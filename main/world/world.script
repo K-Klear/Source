@@ -40,7 +40,7 @@ function init(self)
 		addCottage()
 	end
 	timer.delay(1, true, function() P.essence = P.essence + P.rechargeRate; label.set_text("#essence", P.essence) end)
-	--timer.delay(5, true, function() hero.spawn(1) end)
+	timer.delay(5, true, function() hero.spawn(1) end)
 	hero.spawn(1)
 end
 

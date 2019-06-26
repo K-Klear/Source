@@ -10,8 +10,10 @@ local FADE_DELAY = 10
 local FADE_TIME = 3
 
 local idle
-local exit = {40, 620, 40, 620, 40, 620, 40}
-exit[0] = 620
+local exitDown = {40, 620, 40, 620, 40, 620, 40}
+exitDown[0] = 620
+local exitUp = {620, 40, 620, 40, 620, 40, 620}
+exitUp[0] = -10
 
 local function walk(self, X)
 	local currentX = go.get_position().x
@@ -30,14 +32,26 @@ function idle(self)
 		end
 	elseif self.orders == hash("explore") then
 		local currentX = go.get_position().x
-		if currentX == exit[self.level] then
+		if currentX == exitDown[self.level] then
 			self.level = self.level + 1
 			local pos = go.get_position()
 			pos.y = pos.y - 100
 			go.set_position(pos)
-			walk(self, exit[self.level])
+			walk(self, exitDown[self.level])
 		else
-			walk(self, exit[self.level])
+			walk(self, exitDown[self.level])
+		end
+	elseif self.orders == hash("flee") then
+		local currentX = go.get_position().x
+		if currentX == exitUp[self.level] then
+			self.level = self.level - 1
+			local pos = go.get_position()
+			pos.y = pos.y + 100
+			go.set_position(pos)
+			walk(self, exitUp[self.level])
+			print(self.health)
+		else
+			walk(self, exitUp[self.level])
 		end
 	end
 end
@@ -91,28 +105,41 @@ function init(self)
 	self.level = getLevel(go.get_position(go.get_id()).y)
 	self.kills = {}
 	self.target = {}
+	if self.type == hash("hero") then
+		self.bravery = (math.random() + math.random()) / 4
+	else
+		self.bravery = 0
+	end
+	self.maxHealth = self.health
 	idle(self)
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("trigger_response") then
-		if message.enter then
-			table.insert(self.target, message.other_id)
-			if self.action ~= hash("fight") then fight(self) end
-		elseif message.exit then
-			for key, val in ipairs(self.target) do
-				if val == sender.path then
-					table.remove(self.target, key)
-					break
+		if (message.own_group == hash("hero_range") and message.other_group == hash("dweller_body")) or (message.own_group == hash("dweller_range") and message.other_group == hash("hero_body")) then
+			if message.enter then
+				table.insert(self.target, message.other_id)
+				if self.action ~= hash("fight") then fight(self) end
+			else
+				for key, val in ipairs(self.target) do
+					if val == message.other_id then
+						table.remove(self.target, key)
+						break
+					end
 				end
 			end
 		end
 	elseif message_id == hash("take_damage") then
-		print(self.type)
 		self.health = self.health - message.damage
-		if self.health <= 0 then
+		if self.health < 1 then
 			die(self)
 			msg.post(sender, "target_dead", {type = self.type})
+		else
+			if self.maxHealth * self.bravery > self.health then
+				self.orders = hash("flee")
+				self.target = {}
+				idle(self)
+			end
 		end
 	elseif message_id == hash("target_dead") then
 		for key, val in ipairs(self.target) do
