@@ -1,0 +1,17 @@
+go.property("type", hash("spider"))
+
+function init(self)
+	if self.type == hash("spider") then
+		sprite.play_flipbook("#sprite", "spider")
+	end
+end
+
+function die(self)
+	go.delete(go.get_id(), true)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("die") then
+		go.animate("#sprite", "tint.w", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, 2, 0, die)
+	end
+end

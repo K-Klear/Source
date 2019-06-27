@@ -13,7 +13,7 @@ animations {
     image: "/assets/gfx/spider/boss/walk.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
-  fps: 4
+  fps: 2
   flip_horizontal: 0
   flip_vertical: 0
 }
@@ -26,7 +26,23 @@ animations {
     image: "/assets/gfx/spider/boss/idle.png"
   }
   playback: PLAYBACK_ONCE_FORWARD
-  fps: 4
+  fps: 2
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "build"
+  images {
+    image: "/assets/gfx/spider/boss/idle.png"
+  }
+  images {
+    image: "/assets/gfx/spider/boss/walk.png"
+  }
+  images {
+    image: "/assets/gfx/spider/boss/attack.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 5
   flip_horizontal: 0
   flip_vertical: 0
 }

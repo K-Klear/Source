@@ -13,7 +13,7 @@ animations {
     image: "/assets/gfx/goblin/walk.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
-  fps: 4
+  fps: 5
   flip_horizontal: 0
   flip_vertical: 0
 }

@@ -1,7 +1,4 @@
 images {
-  image: "/assets/gfx/world/cave.png"
-}
-images {
   image: "/assets/gfx/world/cottage.png"
 }
 images {
@@ -12,6 +9,24 @@ images {
 }
 images {
   image: "/assets/gfx/world/cave_front.png"
+}
+images {
+  image: "/assets/gfx/world/cave_end_top.png"
+}
+images {
+  image: "/assets/gfx/world/cave_top1.png"
+}
+images {
+  image: "/assets/gfx/world/cave_mid1.png"
+}
+images {
+  image: "/assets/gfx/world/cave_end_mid.png"
+}
+images {
+  image: "/assets/gfx/world/cave_mid2.png"
+}
+images {
+  image: "/assets/gfx/world/cave_top2.png"
 }
 margin: 0
 extrude_borders: 2

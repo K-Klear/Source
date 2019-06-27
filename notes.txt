@@ -4,8 +4,10 @@ Caves/surface: -1
 Houses: 0.01 - 0.1
 Cave back: 0.3
 Dead actors: 0.4
-Actors: 0.5 - 0.6
+Actors: 0.5
 Cave front: 0.7
+Cave mid: 0.4
+
 
 Credits:
 
@@ -36,3 +38,4 @@ Adding a new Dweller type workflow:
 - Add stats to actorStats.lua
 - Add icon to call gui
 - Add it to the dwellerList variable
+- Add it to the unhash variable in actorScript

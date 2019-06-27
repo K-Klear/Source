@@ -62,7 +62,7 @@ gravity_y = -1000.0
 scale = 0.01
 debug = 0
 max_collisions = 512
-trigger_overlap_capacity = 32
+trigger_overlap_capacity = 128
 ray_cast_limit_3d = 128
 
 [graphics]
@@ -80,4 +80,10 @@ max_sound_sources = 16
 
 [collection]
 max_instances = 4096
+
+[gui]
+max_particlefx_count = 256
+
+[particle_fx]
+max_count = 256
 

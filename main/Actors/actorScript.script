@@ -5,15 +5,41 @@ go.property("speed", 1)
 go.property("alive", true)
 go.property("orders", hash("patrol"))
 go.property("type", hash("hero"))
+go.property("charLvl", 1)
+go.property("build_time", 1)
+go.property("spawn_time", 0)
+
+local STATS = require("main.Actors.actorStats")
 
 local FADE_DELAY = 10
 local FADE_TIME = 3
 
 local idle
-local exitDown = {40, 620, 40, 620, 40, 620, 40}
+local exitDown = {20, 620, 20, 620, 20, 620, 20}
 exitDown[0] = 620
-local exitUp = {620, 40, 620, 40, 620, 40, 620}
+local exitUp = {620, 20, 620, 20, 620, 20, 620}
 exitUp[0] = -10
+local inn = 320
+
+local upgrades = {}
+upgrades[1] = {}
+upgrades[1].XP = 6.6
+upgrades[1].HP = 10
+upgrades[1].ATK = 3
+for lvl = 2, 20 do
+	upgrades[lvl] = {}
+	upgrades[lvl].XP = math.ceil(upgrades[lvl - 1].XP * 1.5)
+	upgrades[lvl].HP = math.ceil(upgrades[lvl - 1].HP * 1.2)
+	upgrades[lvl].ATK = upgrades[lvl - 1].ATK + math.floor(lvl / 4)
+end
+
+
+local unhash = {}
+unhash[hash("spider")] = "spider"
+unhash[hash("spider_boss")] = "spider_boss"
+unhash[hash("goblin")] = "goblin"
+unhash[hash("goblin_boss")] = "goblin_boss"
+
 
 local function walk(self, X)
 	local currentX = go.get_position().x
@@ -23,15 +49,39 @@ local function walk(self, X)
 	self.action = hash("walk")
 end
 
+local function spawn(self)
+	msg.post("/world", "spawn", {type = self.type, pos = inn, level = self.level, guard = math.random() > 0.66})
+end
+
+local build = {}
+
+function build.start(self)
+	sprite.play_flipbook("#sprite", "build")
+	self.base = factory.create("/world#spawn_base", go.get_position(), nil, {type = hash("spider")}, vmath.vector3(0, 0, 0))
+	go.animate(self.base, "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(1, 1, 1), go.EASING_OUTCUBIC, self.build_time)
+	go.animate(self.base, "position.y", go.PLAYBACK_ONCE_FORWARD, go.get_position().y + 25, go.EASING_OUTCUBIC, self.build_time)
+	timer.delay(self.build_time, false, build.finish)
+end
+
+function build.finish(self)
+	self.orders = hash("guard")
+	if self.alive then
+		if self.spawn_time > 0 then
+			self.spawnTimer = timer.delay(self.spawn_time, true, spawn)
+		end
+		idle(self)
+	end
+end
+
 function idle(self)
+	local currentX = go.get_position().x
 	if self.orders == hash("patrol") then
-		if go.get_position().x > 320 then
+		if currentX > 320 then
 			walk(self, 40)
 		else
 			walk(self, 620)
 		end
 	elseif self.orders == hash("explore") then
-		local currentX = go.get_position().x
 		if currentX == exitDown[self.level] then
 			self.level = self.level + 1
 			local pos = go.get_position()
@@ -41,17 +91,58 @@ function idle(self)
 		else
 			walk(self, exitDown[self.level])
 		end
+	elseif self.orders == hash("guard") then
+		if currentX == inn then
+			if math.random() > 0.5 then
+				walk(self, inn + 50)
+			else
+				walk(self, inn - 50)
+			end
+		else
+			walk(self, inn)
+		end
 	elseif self.orders == hash("flee") then
-		local currentX = go.get_position().x
-		if currentX == exitUp[self.level] then
+		if currentX == exitUp[self.level] and self.level > 0 then
+			print(self.level)
 			self.level = self.level - 1
 			local pos = go.get_position()
 			pos.y = pos.y + 100
 			go.set_position(pos)
-			walk(self, exitUp[self.level])
-			print(self.health)
+			if self.level == 0 then
+				self.orders = hash("rest")
+				walk(self, inn)
+			else
+				walk(self, exitUp[self.level])
+			end
+		elseif currentX == exitUp[self.level] and self.level == 0 then
+			go.delete()
 		else
 			walk(self, exitUp[self.level])
+		end
+	elseif self.orders == hash("rest") then
+		if currentX == inn then
+			for key, val in pairs(self.kills) do
+				self.gold = self.gold + STATS[unhash[key]].bounty * val
+				self.kills[key] = 0
+			end
+			while self.gold > upgrades[self.charLvl + 1].XP do
+				self.charLvl = self.charLvl + 1
+				self.gold = self.gold - upgrades[self.charLvl].XP
+				self.maxHealth = upgrades[self.charLvl].HP
+				self.attack = upgrades[self.charLvl].ATK
+				particlefx.play("#levelUp")
+			end
+			self.health = self.maxHealth
+			self.orders = hash("explore")
+			idle(self)
+		else
+			walk(self, inn)
+		end
+	elseif self.orders == hash("build") then
+		if currentX == inn then
+			build.start(self)
+		else
+			walk(self, inn)
 		end
 	end
 end
@@ -79,11 +170,21 @@ end
 
 local function die(self)
 	self.alive = false
-	go.set_position(vmath.vector3(go.get_position().x, go.get_position().y, 0.4))
+	go.set_position(go.get_position() - vmath.vector3(0, 0, 0.01))
 	go.cancel_animations(go.get_id(), "position")
 	sprite.play_flipbook("#sprite", "dead")
 	msg.post("#collisionobject", "disable")
-	msg.post("/world", "removeDweller")
+	if self.type == hash("hero") then
+		msg.post("/world", "coinDrop", {gold = self.gold, level = self.level})
+	else
+		msg.post("/world", "removeDweller")
+	end
+	if self.base then
+		msg.post(self.base, "die")
+		if self.spawnTimer then
+			timer.cancel(self.spawnTimer)
+		end
+	end
 	timer.delay(FADE_DELAY, false, function(self) go.animate("#sprite", "tint.w", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, FADE_TIME, 0, function(self) go.delete(go.get_id()) end) end)
 end
 
@@ -107,6 +208,7 @@ function init(self)
 	self.target = {}
 	if self.type == hash("hero") then
 		self.bravery = (math.random() + math.random()) / 4
+		self.gold = math.random(1, 5)
 	else
 		self.bravery = 0
 	end
@@ -149,6 +251,8 @@ function on_message(self, message_id, message, sender)
 			end
 		end
 		self.kills[message.type] = self.kills[message.type] or 0
-		self.kills[message.type] = self.kills[message.type] + 1 
+		self.kills[message.type] = self.kills[message.type] + 1
+	elseif message_id == hash("orders") then
+		self.orders = message.orders; idle(self)
 	end
 end

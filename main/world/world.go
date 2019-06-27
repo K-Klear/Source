@@ -14,146 +14,6 @@ components {
   }
 }
 embedded_components {
-  id: "cave1"
-  type: "sprite"
-  data: "tile_set: \"/main/world/world.atlas\"\n"
-  "default_animation: \"cave\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
-  "blend_mode: BLEND_MODE_ALPHA\n"
-  ""
-  position {
-    x: 320.0
-    y: 800.0
-    z: -1.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
-  id: "cave2"
-  type: "sprite"
-  data: "tile_set: \"/main/world/world.atlas\"\n"
-  "default_animation: \"cave\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
-  "blend_mode: BLEND_MODE_ALPHA\n"
-  ""
-  position {
-    x: 320.0
-    y: 700.0
-    z: -1.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
-  id: "cave3"
-  type: "sprite"
-  data: "tile_set: \"/main/world/world.atlas\"\n"
-  "default_animation: \"cave\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
-  "blend_mode: BLEND_MODE_ALPHA\n"
-  ""
-  position {
-    x: 320.0
-    y: 600.0
-    z: -1.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
-  id: "cave4"
-  type: "sprite"
-  data: "tile_set: \"/main/world/world.atlas\"\n"
-  "default_animation: \"cave\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
-  "blend_mode: BLEND_MODE_ALPHA\n"
-  ""
-  position {
-    x: 320.0
-    y: 500.0
-    z: -1.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
-  id: "cave5"
-  type: "sprite"
-  data: "tile_set: \"/main/world/world.atlas\"\n"
-  "default_animation: \"cave\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
-  "blend_mode: BLEND_MODE_ALPHA\n"
-  ""
-  position {
-    x: 320.0
-    y: 400.0
-    z: -1.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
-  id: "cave6"
-  type: "sprite"
-  data: "tile_set: \"/main/world/world.atlas\"\n"
-  "default_animation: \"cave\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
-  "blend_mode: BLEND_MODE_ALPHA\n"
-  ""
-  position {
-    x: 320.0
-    y: 300.0
-    z: -1.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
-  id: "cave7"
-  type: "sprite"
-  data: "tile_set: \"/main/world/world.atlas\"\n"
-  "default_animation: \"cave\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
-  "blend_mode: BLEND_MODE_ALPHA\n"
-  ""
-  position {
-    x: 320.0
-    y: 200.0
-    z: -1.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
   id: "surface"
   type: "sprite"
   data: "tile_set: \"/main/world/world.atlas\"\n"
@@ -354,7 +214,7 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "cave_back"
+  id: "entrance_back"
   type: "sprite"
   data: "tile_set: \"/main/world/world.atlas\"\n"
   "default_animation: \"cave_back\"\n"
@@ -374,7 +234,7 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "cave_front"
+  id: "entrance_front"
   type: "sprite"
   data: "tile_set: \"/main/world/world.atlas\"\n"
   "default_animation: \"cave_front\"\n"
@@ -385,6 +245,42 @@ embedded_components {
     x: 612.0
     y: 894.0
     z: 0.7
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "caveSpawner"
+  type: "factory"
+  data: "prototype: \"/main/world/cave.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "spawn_base"
+  type: "factory"
+  data: "prototype: \"/main/Actors/base.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
   }
   rotation {
     x: 0.0

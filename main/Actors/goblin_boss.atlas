@@ -26,7 +26,7 @@ animations {
     image: "/assets/gfx/goblin/boss/idle.png"
   }
   playback: PLAYBACK_ONCE_FORWARD
-  fps: 4
+  fps: 3
   flip_horizontal: 0
   flip_vertical: 0
 }
