@@ -14,7 +14,7 @@ components {
   }
 }
 embedded_components {
-  id: "sprite"
+  id: "1"
   type: "sprite"
   data: "tile_set: \"/main/Actors/spider_boss.atlas\"\n"
   "default_animation: \"idle\"\n"

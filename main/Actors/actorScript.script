@@ -8,6 +8,7 @@ go.property("type", hash("hero"))
 go.property("charLvl", 1)
 go.property("build_time", 1)
 go.property("spawn_time", 0)
+go.property("sprite", 1)
 
 local STATS = require("main.Actors.actorStats")
 
@@ -43,8 +44,8 @@ unhash[hash("goblin_boss")] = "goblin_boss"
 
 local function walk(self, X)
 	local currentX = go.get_position().x
-	sprite.play_flipbook("#sprite", "walk")
-	sprite.set_hflip("#sprite", X < currentX)
+	sprite.play_flipbook("#"..self.sprite, "walk")
+	sprite.set_hflip("#"..self.sprite, X < currentX)
 	go.animate(go.get_id(), "position.x", go.PLAYBACK_ONCE_FORWARD, X, go.EASING_LINEAR, math.abs(currentX - X) / self.speed, 0, idle)
 	self.action = hash("walk")
 end
@@ -56,7 +57,7 @@ end
 local build = {}
 
 function build.start(self)
-	sprite.play_flipbook("#sprite", "build")
+	sprite.play_flipbook("#"..self.sprite, "build")
 	self.base = factory.create("/world#spawn_base", go.get_position(), nil, {type = hash("spider")}, vmath.vector3(0, 0, 0))
 	go.animate(self.base, "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(1, 1, 1), go.EASING_OUTCUBIC, self.build_time)
 	go.animate(self.base, "position.y", go.PLAYBACK_ONCE_FORWARD, go.get_position().y + 25, go.EASING_OUTCUBIC, self.build_time)
@@ -131,6 +132,9 @@ function idle(self)
 				self.maxHealth = upgrades[self.charLvl].HP
 				self.attack = upgrades[self.charLvl].ATK
 				particlefx.play("#levelUp")
+				msg.post("#"..self.sprite, "disable")
+				self.sprite = self.sprite + 1
+				msg.post("#"..self.sprite, "enable")
 			end
 			self.health = self.maxHealth
 			self.orders = hash("explore")
@@ -149,7 +153,7 @@ end
 
 local function attack(self)
 	if self.alive and #self.target > 0 then
-		sprite.play_flipbook("#sprite", "attack")
+		sprite.play_flipbook("#"..self.sprite, "attack")
 		msg.post(self.target[1], hash("take_damage"), {damage = self.attack})
 		timer.delay(self.attack_speed, false, attack)
 	elseif self.alive and #self.target == 0 then
@@ -160,9 +164,9 @@ end
 local function fight(self)
 	go.cancel_animations(go.get_id(), "position")
 	if go.get_position(self.target[1]).x > go.get_position().x then
-		sprite.set_hflip("#sprite", false)
+		sprite.set_hflip("#"..self.sprite, false)
 	else
-		sprite.set_hflip("#sprite", true)
+		sprite.set_hflip("#"..self.sprite, true)
 	end
 	self.action = hash("fight")
 	attack(self)
@@ -172,7 +176,7 @@ local function die(self)
 	self.alive = false
 	go.set_position(go.get_position() - vmath.vector3(0, 0, 0.01))
 	go.cancel_animations(go.get_id(), "position")
-	sprite.play_flipbook("#sprite", "dead")
+	sprite.play_flipbook("#"..self.sprite, "dead")
 	msg.post("#collisionobject", "disable")
 	if self.type == hash("hero") then
 		msg.post("/world", "coinDrop", {gold = self.gold, level = self.level})
@@ -185,7 +189,7 @@ local function die(self)
 			timer.cancel(self.spawnTimer)
 		end
 	end
-	timer.delay(FADE_DELAY, false, function(self) go.animate("#sprite", "tint.w", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, FADE_TIME, 0, function(self) go.delete(go.get_id()) end) end)
+	timer.delay(FADE_DELAY, false, function(self) go.animate("#"..self.sprite, "tint.w", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_LINEAR, FADE_TIME, 0, function(self) go.delete(go.get_id()) end) end)
 end
 
 local function getLevel(y)
@@ -209,6 +213,8 @@ function init(self)
 	if self.type == hash("hero") then
 		self.bravery = (math.random() + math.random()) / 4
 		self.gold = math.random(1, 5)
+		msg.post("#2", "disable")
+		msg.post("#3", "disable")
 	else
 		self.bravery = 0
 	end

@@ -14,7 +14,7 @@ emitters {
     z: 0.0
     w: 1.0
   }
-  tile_source: "/main/Actors/knight.atlas"
+  tile_source: "/main/Actors/heroes/lvlX.atlas"
   animation: "idle"
   material: "/builtins/materials/particlefx.material"
   blend_mode: BLEND_MODE_ADD

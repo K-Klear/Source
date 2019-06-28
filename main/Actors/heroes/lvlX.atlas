@@ -1,16 +1,16 @@
 images {
-  image: "/assets/gfx/knight/dead.png"
+  image: "/assets/gfx/heroes/lvlX/dead.png"
 }
 images {
-  image: "/assets/gfx/knight/idle.png"
+  image: "/assets/gfx/heroes/lvlX/idle.png"
 }
 animations {
   id: "walk"
   images {
-    image: "/assets/gfx/knight/idle.png"
+    image: "/assets/gfx/heroes/lvlX/idle.png"
   }
   images {
-    image: "/assets/gfx/knight/walk.png"
+    image: "/assets/gfx/heroes/lvlX/walk.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 4
@@ -20,10 +20,10 @@ animations {
 animations {
   id: "attack"
   images {
-    image: "/assets/gfx/knight/attack.png"
+    image: "/assets/gfx/heroes/lvlX/attack.png"
   }
   images {
-    image: "/assets/gfx/knight/idle.png"
+    image: "/assets/gfx/heroes/lvlX/idle.png"
   }
   playback: PLAYBACK_ONCE_FORWARD
   fps: 3

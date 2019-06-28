@@ -36,7 +36,7 @@ embedded_components {
 embedded_components {
   id: "spawn_knight"
   type: "factory"
-  data: "prototype: \"/main/Actors/knight.go\"\n"
+  data: "prototype: \"/main/Actors/heroes/hero.go\"\n"
   "load_dynamically: false\n"
   ""
   position {
@@ -90,7 +90,7 @@ embedded_components {
 embedded_components {
   id: "spawn_peasant"
   type: "factory"
-  data: "prototype: \"/main/Actors/peasant.go\"\n"
+  data: "prototype: \"/main/Actors/heroes/peasant.go\"\n"
   "load_dynamically: false\n"
   ""
   position {
