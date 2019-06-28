@@ -1,9 +1,9 @@
 local M = {
-	knight = {
+	hero = {
 		health = 10,
 		attack = 3,
 		attack_speed = 1,
-		speed = 100,
+		speed = 25,
 		orders = hash("explore")
 	},
 	spider = {

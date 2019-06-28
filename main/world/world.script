@@ -29,7 +29,7 @@ end
 local hero = {}
 
 function hero.spawn(level)
-	table.insert(heroes, factory.create("#spawn_knight", vmath.vector3(-10, 880, 0.65), nil, STATS.knight))
+	table.insert(heroes, factory.create("#spawn_hero", vmath.vector3(-10, 880, 0.65), nil, STATS.hero))
 end
 
 function init(self)

@@ -165,7 +165,147 @@ embedded_components {
 embedded_components {
   id: "3"
   type: "sprite"
-  data: "tile_set: \"/main/Actors/heroes/lvlX.atlas\"\n"
+  data: "tile_set: \"/main/Actors/heroes/lvl3.atlas\"\n"
+  "default_animation: \"idle\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 0.0
+    y: 9.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "4"
+  type: "sprite"
+  data: "tile_set: \"/main/Actors/heroes/lvl4.atlas\"\n"
+  "default_animation: \"idle\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 0.0
+    y: 9.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "5"
+  type: "sprite"
+  data: "tile_set: \"/main/Actors/heroes/lvl5.atlas\"\n"
+  "default_animation: \"idle\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 0.0
+    y: 9.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "6"
+  type: "sprite"
+  data: "tile_set: \"/main/Actors/heroes/lvl6.atlas\"\n"
+  "default_animation: \"idle\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 0.0
+    y: 9.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "7"
+  type: "sprite"
+  data: "tile_set: \"/main/Actors/heroes/lvl7.atlas\"\n"
+  "default_animation: \"idle\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 0.0
+    y: 9.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "8"
+  type: "sprite"
+  data: "tile_set: \"/main/Actors/heroes/lvl8.atlas\"\n"
+  "default_animation: \"idle\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 0.0
+    y: 9.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "9"
+  type: "sprite"
+  data: "tile_set: \"/main/Actors/heroes/lvl9.atlas\"\n"
+  "default_animation: \"idle\"\n"
+  "material: \"/builtins/materials/sprite.material\"\n"
+  "blend_mode: BLEND_MODE_ALPHA\n"
+  ""
+  position {
+    x: 0.0
+    y: 9.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "10"
+  type: "sprite"
+  data: "tile_set: \"/main/Actors/heroes/lvl10.atlas\"\n"
   "default_animation: \"idle\"\n"
   "material: \"/builtins/materials/sprite.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"

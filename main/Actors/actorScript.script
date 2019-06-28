@@ -27,9 +27,9 @@ upgrades[1] = {}
 upgrades[1].XP = 6.6
 upgrades[1].HP = 10
 upgrades[1].ATK = 3
-for lvl = 2, 20 do
+for lvl = 2, 100 do
 	upgrades[lvl] = {}
-	upgrades[lvl].XP = math.ceil(upgrades[lvl - 1].XP * 1.5)
+	upgrades[lvl].XP = math.ceil(upgrades[lvl - 1].XP * 1.05)
 	upgrades[lvl].HP = math.ceil(upgrades[lvl - 1].HP * 1.2)
 	upgrades[lvl].ATK = upgrades[lvl - 1].ATK + math.floor(lvl / 4)
 end
@@ -72,6 +72,20 @@ function build.finish(self)
 		end
 		idle(self)
 	end
+end
+
+local function levelUp(self)
+	self.charLvl = self.charLvl + 1
+	self.gold = self.gold - upgrades[self.charLvl].XP
+	self.maxHealth = upgrades[self.charLvl].HP
+	self.attack = upgrades[self.charLvl].ATK
+	particlefx.play("#levelUp")
+	if self.charLvl < 11 then
+		msg.post("#"..self.sprite, "disable")
+		self.sprite = self.sprite + 1
+		msg.post("#"..self.sprite, "enable")
+	end
+	idle(self)
 end
 
 function idle(self)
@@ -127,14 +141,7 @@ function idle(self)
 				self.kills[key] = 0
 			end
 			while self.gold > upgrades[self.charLvl + 1].XP do
-				self.charLvl = self.charLvl + 1
-				self.gold = self.gold - upgrades[self.charLvl].XP
-				self.maxHealth = upgrades[self.charLvl].HP
-				self.attack = upgrades[self.charLvl].ATK
-				particlefx.play("#levelUp")
-				msg.post("#"..self.sprite, "disable")
-				self.sprite = self.sprite + 1
-				msg.post("#"..self.sprite, "enable")
+				levelUp(self)
 			end
 			self.health = self.maxHealth
 			self.orders = hash("explore")
@@ -213,8 +220,9 @@ function init(self)
 	if self.type == hash("hero") then
 		self.bravery = (math.random() + math.random()) / 4
 		self.gold = math.random(1, 5)
-		msg.post("#2", "disable")
-		msg.post("#3", "disable")
+		for lvl = 2, 10 do
+			msg.post("#"..lvl, "disable")
+		end
 	else
 		self.bravery = 0
 	end

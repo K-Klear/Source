@@ -1,16 +1,16 @@
 images {
-  image: "/assets/gfx/peasant/dead.png"
+  image: "/assets/gfx/heroes/lvl8/dead.png"
 }
 images {
-  image: "/assets/gfx/peasant/idle.png"
+  image: "/assets/gfx/heroes/lvl8/idle.png"
 }
 animations {
   id: "walk"
   images {
-    image: "/assets/gfx/peasant/idle.png"
+    image: "/assets/gfx/heroes/lvl8/idle.png"
   }
   images {
-    image: "/assets/gfx/peasant/walk.png"
+    image: "/assets/gfx/heroes/lvl8/walk.png"
   }
   playback: PLAYBACK_LOOP_FORWARD
   fps: 4
@@ -20,13 +20,13 @@ animations {
 animations {
   id: "attack"
   images {
-    image: "/assets/gfx/peasant/attack.png"
+    image: "/assets/gfx/heroes/lvl8/attack.png"
   }
   images {
-    image: "/assets/gfx/peasant/idle.png"
+    image: "/assets/gfx/heroes/lvl8/idle.png"
   }
   playback: PLAYBACK_ONCE_FORWARD
-  fps: 4
+  fps: 3
   flip_horizontal: 0
   flip_vertical: 0
 }

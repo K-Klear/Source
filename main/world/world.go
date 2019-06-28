@@ -34,24 +34,6 @@ embedded_components {
   }
 }
 embedded_components {
-  id: "spawn_knight"
-  type: "factory"
-  data: "prototype: \"/main/Actors/heroes/hero.go\"\n"
-  "load_dynamically: false\n"
-  ""
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
   id: "spawn_spider"
   type: "factory"
   data: "prototype: \"/main/Actors/spider.go\"\n"
@@ -73,24 +55,6 @@ embedded_components {
   id: "spawn_house"
   type: "factory"
   data: "prototype: \"/main/world/house.go\"\n"
-  "load_dynamically: false\n"
-  ""
-  position {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-  }
-  rotation {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-}
-embedded_components {
-  id: "spawn_peasant"
-  type: "factory"
-  data: "prototype: \"/main/Actors/heroes/peasant.go\"\n"
   "load_dynamically: false\n"
   ""
   position {
@@ -275,6 +239,24 @@ embedded_components {
   id: "spawn_base"
   type: "factory"
   data: "prototype: \"/main/Actors/base.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "spawn_hero"
+  type: "factory"
+  data: "prototype: \"/main/Actors/heroes/hero.go\"\n"
   "load_dynamically: false\n"
   ""
   position {
