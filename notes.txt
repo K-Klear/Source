@@ -5,6 +5,7 @@ Houses: 0.01 - 0.1
 (Dead actors: ???)
 Bases: 0.61
 Actors: 0.65
+Gold: 0.66
 Cave front: 0.7
 Cave mid: 0.6
 
@@ -13,29 +14,35 @@ Credits:
 
 Gold icons: https://opengameart.org/content/gold-treasure-icons
 
-
-Gameplay:
-
-Player actions:
-
-Empower:
-- Create Boss
-- Create artifact
-
-Call:
-- Attract denizen type
-
-Agitate:
-- Make denizens more aggresive
-
-Corrupt:
-- Increase effectiveness of other actions
-
 Adding a new Dweller type workflow:
 - Create graphics + boss graphics
 - Create atlases
+- Create the GO
 - Add spawner to world.go
 - Add stats to actorStats.lua
 - Add icon to call gui
-- Add it to the dwellerList variable
+- Add icon into the icon atlas
+- Add it to the dwellersList variable
 - Add it to the unhash variable in actorScript
+
+
+Bugs:
+- Some hero sprites have bad pixels (lvls 1-3, 10) walk animation, maybe more.
+- Too many GOs might be a concern at some point. There should be a system preventing overflow.
+
+Things I had to cut:
+- Villagers going around
+- Day/night cycle
+- Dwellers attacking village with various objectives (kill, abduct, steal gold)
+	- Bounties for dead enemies changing depending on how much of a danger each dweller type poses
+- Direct interaction with the village
+	- Dark cult
+	- Sending dread visions to attract heroes
+	- Helping or hindering village growth
+- Adventurer-based economy for the village. Have it grow as heroes use services.
+- More hero types - archers, healers, mages...
+- Adventuring parties sticking together
+- Double (or triple) cave space by allowing actors to walk on the background
+- Making it possible to descend to a lower level without going through *every single enemy* on the current level
+- Using gold dropped in the dungeon to create cursed items to help heroes while corrupting them at the same time
+- Raising undead 

@@ -58,6 +58,7 @@ embedded_components {
   "restitution: 0.5\n"
   "group: \"hero_body\"\n"
   "mask: \"dweller_range\"\n"
+  "mask: \"gold\"\n"
   "embedded_collision_shape {\n"
   "  shapes {\n"
   "    shape_type: TYPE_BOX\n"

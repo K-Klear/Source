@@ -56,7 +56,19 @@ local M = {
 		bounty = 100,
 		orders = hash("build"),
 		build_time = 5
-	}
+	},
+	drake = {
+		type = hash("drake"),
+		health = 45,
+		attack = 15,
+		attack_speed = 1.4,
+		callTime = 1,
+		callCost = 100,
+		empowerTime = 8,
+		empowerCost = 200,
+		speed = 35,
+		bounty = 25,
+	},
 }
 
 return M

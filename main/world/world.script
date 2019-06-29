@@ -7,10 +7,10 @@ local P = require("main.player")
 local houses = {}
 local dwellers = {}
 local heroes = {}
-local dwellersList = {"spider", "goblin"}
+local dwellersList = {"spider", "goblin", "drake"}
 
+local GOLD = require("main/world/trackGold")
 local activeLevel = nil
-local gold = {}; for x = 1, 7 do gold[x] = 0 end
 
 local currentAction = {action = "call", target = "spider"}
 
@@ -34,7 +34,7 @@ end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	--msg.post("@render:", "use_fixed_fit_projection")
+	msg.post("@render:", "use_fixed_fit_projection")
 	P.name = ELD.elderize("Klear")
 	print(P.name)
 	for x = 1, 20 do
@@ -196,7 +196,5 @@ function on_message(self, message_id, message, sender)
 		if message.type == hash("spider_boss") then type = "spider" end
 		table.insert(dwellers, {go = factory.create("#spawn_"..type, vmath.vector3(message.pos, 880 - message.level * 100, 0.65), nil, STATS[type]), type = type, level = level})
 		if message.guard then msg.post(dwellers[#dwellers].go, "orders", {orders = hash("guard")}) end
-	elseif message_id == hash("coinDrop") then
-		gold[message.level] = gold[message.level] + message.gold
 	end
 end

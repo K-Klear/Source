@@ -15,6 +15,9 @@ local STATS = require("main.Actors.actorStats")
 local FADE_DELAY = 10
 local FADE_TIME = 3
 
+local GOLD = require("main/world/trackGold")
+
+
 local idle
 local exitDown = {20, 620, 20, 620, 20, 620, 20}
 exitDown[0] = 620
@@ -40,6 +43,7 @@ unhash[hash("spider")] = "spider"
 unhash[hash("spider_boss")] = "spider_boss"
 unhash[hash("goblin")] = "goblin"
 unhash[hash("goblin_boss")] = "goblin_boss"
+unhash[hash("drake")] = "drake"
 
 
 local function walk(self, X)
@@ -118,7 +122,6 @@ function idle(self)
 		end
 	elseif self.orders == hash("flee") then
 		if currentX == exitUp[self.level] and self.level > 0 then
-			print(self.level)
 			self.level = self.level - 1
 			local pos = go.get_position()
 			pos.y = pos.y + 100
@@ -186,7 +189,9 @@ local function die(self)
 	sprite.play_flipbook("#"..self.sprite, "dead")
 	msg.post("#collisionobject", "disable")
 	if self.type == hash("hero") then
-		msg.post("/world", "coinDrop", {gold = self.gold, level = self.level})
+		if self.gold > 0 then
+			table.insert(GOLD, factory.create("/world#spawn_gold", go.get_position() + vmath.vector3(0, 0, 0.01), nil, {gold = self.gold}))
+		end
 	else
 		msg.post("/world", "removeDweller")
 	end
@@ -268,5 +273,7 @@ function on_message(self, message_id, message, sender)
 		self.kills[message.type] = self.kills[message.type] + 1
 	elseif message_id == hash("orders") then
 		self.orders = message.orders; idle(self)
+	elseif message_id == hash("getGold") then
+		self.gold = self.gold + message.gold
 	end
 end

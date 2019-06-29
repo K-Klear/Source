@@ -36,7 +36,7 @@ embedded_components {
 embedded_components {
   id: "spawn_spider"
   type: "factory"
-  data: "prototype: \"/main/Actors/spider.go\"\n"
+  data: "prototype: \"/main/Actors/dwellers/spider.go\"\n"
   "load_dynamically: false\n"
   ""
   position {
@@ -126,7 +126,7 @@ embedded_components {
 embedded_components {
   id: "spawn_goblin"
   type: "factory"
-  data: "prototype: \"/main/Actors/goblin.go\"\n"
+  data: "prototype: \"/main/Actors/dwellers/goblin.go\"\n"
   "load_dynamically: false\n"
   ""
   position {
@@ -144,7 +144,7 @@ embedded_components {
 embedded_components {
   id: "spawn_spider_boss"
   type: "factory"
-  data: "prototype: \"/main/Actors/spider_boss.go\"\n"
+  data: "prototype: \"/main/Actors/dwellers/spider_boss.go\"\n"
   "load_dynamically: false\n"
   ""
   position {
@@ -162,7 +162,7 @@ embedded_components {
 embedded_components {
   id: "spawn_goblin_boss"
   type: "factory"
-  data: "prototype: \"/main/Actors/goblin_boss.go\"\n"
+  data: "prototype: \"/main/Actors/dwellers/goblin_boss.go\"\n"
   "load_dynamically: false\n"
   ""
   position {
@@ -257,6 +257,42 @@ embedded_components {
   id: "spawn_hero"
   type: "factory"
   data: "prototype: \"/main/Actors/heroes/hero.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "spawn_gold"
+  type: "factory"
+  data: "prototype: \"/main/gold.go\"\n"
+  "load_dynamically: false\n"
+  ""
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+}
+embedded_components {
+  id: "spawn_drake"
+  type: "factory"
+  data: "prototype: \"/main/Actors/dwellers/drake.go\"\n"
   "load_dynamically: false\n"
   ""
   position {

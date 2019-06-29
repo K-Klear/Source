@@ -1,0 +1,24 @@
+images {
+  image: "/assets/gfx/gold/1.png"
+}
+images {
+  image: "/assets/gfx/gold/16.png"
+}
+images {
+  image: "/assets/gfx/gold/2.png"
+}
+images {
+  image: "/assets/gfx/gold/32.png"
+}
+images {
+  image: "/assets/gfx/gold/4.png"
+}
+images {
+  image: "/assets/gfx/gold/64.png"
+}
+images {
+  image: "/assets/gfx/gold/8.png"
+}
+margin: 1
+extrude_borders: 0
+inner_padding: 0

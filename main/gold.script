@@ -1,0 +1,53 @@
+go.property("gold", 1)
+
+local collisions = {}
+local GOLD = require("main/world/trackGold")
+
+local function setAmount(self)
+	if self.gold > 63 then
+		sprite.play_flipbook("#sprite", "64")
+	elseif self.gold > 31 then
+		sprite.play_flipbook("#sprite", "32")
+	elseif self.gold > 15 then
+		sprite.play_flipbook("#sprite", "16")
+	elseif self.gold > 7 then
+		sprite.play_flipbook("#sprite", "8")
+	elseif self.gold > 3 then
+		sprite.play_flipbook("#sprite", "4")
+	elseif self.gold > 1 then
+		sprite.play_flipbook("#sprite", "2")
+	else
+		sprite.play_flipbook("#sprite", "1")
+	end
+end
+
+function init(self)
+	setAmount(self)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("trigger_response") then
+		if message.other_group == hash("hero_body") then
+			msg.post(message.other_id, "getGold", {gold = self.gold})
+			go.delete()
+		elseif message.other_group == hash("gold") then
+			local id
+			local other
+			for key, val in ipairs(GOLD) do
+				if val == message.other_id then
+					other = key
+				elseif val == go.get_id() then
+					id = key
+				end
+			end
+			if other and id then
+				msg.post(GOLD[other], "gainGold", {gold = self.gold})
+				table.remove(GOLD, id)
+				go.delete()
+			end
+		end
+	elseif message_id == hash("gainGold") then
+		self.gold = self.gold + message.gold
+		setAmount(self)
+	end
+end
