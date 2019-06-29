@@ -6,7 +6,7 @@ local STATS = require("main.Actors.actorStats")
 local P = require("main.player")
 local houses = {}
 local heroes = {}
-local dwellersList = {"spider", "goblin", "drake"}
+local dwellersList = {"spider", "goblin", "drake", "orc"}
 
 local GOLD = require("main/world/trackGold")
 local DWELLERS = require("main/trackDwellers")

@@ -5,14 +5,21 @@ Houses: 0.01 - 0.1
 (Dead actors: ???)
 Bases: 0.61
 Actors: 0.65
-Gold: 0.66
+Gold: 1 or thereabouts
 Cave front: 0.7
 Cave mid: 0.6
 
 
 Credits:
 
+GFX:
 Gold icons: https://opengameart.org/content/gold-treasure-icons
+SFX
+Pickaxe: https://freesound.org/people/Benboncan/sounds/71823/
+Coins: https://freesound.org/people/PetervH/sounds/324760/
+
+
+
 
 Adding a new Dweller type workflow:
 - Create graphics + boss graphics

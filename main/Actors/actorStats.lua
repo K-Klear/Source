@@ -82,6 +82,18 @@ local M = {
 		speed = 35,
 		bounty = 25,
 	},
+	orc = {
+		type = hash("orc"),
+		health = 20,
+		attack = 10,
+		attack_speed = 1.5,
+		callTime = 1,
+		callCost = 15,
+		empowerTime = 3,
+		empowerCost = 35,
+		speed = 15,
+		bounty = 10,
+	},
 }
 
 return M

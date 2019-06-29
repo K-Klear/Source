@@ -25,6 +25,7 @@ function init(self)
 			spider = gui.new_box_node(vmath.vector3(-128, 128, 0), vmath.vector3(64, 64, 0)),
 			goblin = gui.new_box_node(vmath.vector3(-64, 128, 0), vmath.vector3(64, 64, 0)),
 			drake = gui.new_box_node(vmath.vector3(0, 128, 0), vmath.vector3(64, 64, 0)),
+			orc = gui.new_box_node(vmath.vector3(64, 128, 0), vmath.vector3(64, 64, 0)),
 		}
 	}
 	for key, val in pairs(dialog.callPick.btn) do

@@ -49,6 +49,8 @@ unhash[hash("goblin")] = "goblin"
 unhash[hash("goblin_worker")] = "goblin_worker"
 unhash[hash("goblin_boss")] = "goblin_boss"
 unhash[hash("drake")] = "drake"
+unhash[hash("orc")] = "orc"
+
 
 
 local function walk(self, X)
@@ -64,7 +66,7 @@ local function spawn(self)
 		table.insert(DWELLERS, {go = factory.create("/world#spawn_spider", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.spider), type = "spider", level = self.level})
 		if math.random() > 0.66 then msg.post(DWELLERS[#DWELLERS].go, "orders", {orders = hash("guard")}) end
 	elseif self.type == hash("goblin_boss") then
-		if math.random() > 0.5 then 
+		if math.random() > 0.3 then 
 			table.insert(DWELLERS, {go = factory.create("/world#spawn_goblin", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin), type = "goblin", level = self.level})
 		else
 			table.insert(DWELLERS, {go = factory.create("/world#spawn_goblin_worker", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin_worker), type = "goblin_worker", level = self.level})
@@ -73,7 +75,8 @@ local function spawn(self)
 end
 
 local function createGold(position, amount)
-	table.insert(GOLD, factory.create("/world#spawn_gold", position + vmath.vector3(0, 0, 0.01), nil, {gold = amount}))
+	table.insert(GOLD, factory.create("/world#spawn_gold", position + vmath.vector3(0, 0, 0.31), nil, {gold = amount}, vmath.vector3(0.5, 0.5, 1)))
+	sound.play("/SFX#coins")
 end
 
 local build = {}
@@ -112,15 +115,26 @@ end
 
 local mine = {}
 
+function mine.sound(self)
+	if self.action == "mine" and self.alive then
+		self.sound = sound.play("/SFX#goblin_work"..math.random(1, 3))
+		timer.delay(1, false, mine.sound)
+	end
+end
+
 function mine.start(self)
 	sprite.play_flipbook("#"..self.sprite, "attack")
+	self.sound = sound.play("/SFX#goblin_work"..math.random(1, 3))
+	self.action = "mine"
+	timer.delay(1, false, mine.sound)
 	timer.delay(self.workTime, false, mine.finish)
 end
 
 function mine.finish(self)
 	if self.alive then
 		self.mineTarget = nil
-		createGold(go.get_position(), math.random(1, 3))
+		createGold(go.get_position(), 1)
+		self.action = "idle"
 		idle(self)
 	end
 end
