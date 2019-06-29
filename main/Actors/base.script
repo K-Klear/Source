@@ -5,6 +5,8 @@ function init(self)
 		sprite.play_flipbook("#sprite", "spider")
 	elseif self.type == hash("goblin_boss") then
 		sprite.play_flipbook("#sprite", "goblin")
+	elseif self.type == hash("orc_boss") then
+		sprite.play_flipbook("#sprite", "orc")
 	end
 end
 

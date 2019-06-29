@@ -71,6 +71,8 @@ local function spawn(self)
 		else
 			table.insert(DWELLERS, {go = factory.create("/world#spawn_goblin_worker", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin_worker), type = "goblin_worker", level = self.level})
 		end
+	elseif self.type == hash("orc_boss") then
+		table.insert(DWELLERS, {go = factory.create("/world#spawn_orc_cultist", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.orc_cultist), type = "orc_cultist", level = self.level})
 	end
 end
 
@@ -219,6 +221,9 @@ function idle(self)
 			if self.mineTarget < leftExit then self.mineTarget = leftExit + 10 end
 			walk(self, self.mineTarget)
 		end
+	elseif self.orders == hash("worship") then
+		self.orders = hash("guard")
+		idle(self)
 	end
 end
 

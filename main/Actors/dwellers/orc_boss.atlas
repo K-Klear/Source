@@ -1,0 +1,48 @@
+images {
+  image: "/assets/gfx/orc/boss/dead.png"
+}
+images {
+  image: "/assets/gfx/orc/boss/idle.png"
+}
+animations {
+  id: "walk"
+  images {
+    image: "/assets/gfx/orc/boss/idle.png"
+  }
+  images {
+    image: "/assets/gfx/orc/boss/walk.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 2
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "attack"
+  images {
+    image: "/assets/gfx/orc/boss/attack.png"
+  }
+  images {
+    image: "/assets/gfx/orc/boss/idle.png"
+  }
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 2
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "build"
+  images {
+    image: "/assets/gfx/orc/boss/attack.png"
+  }
+  images {
+    image: "/assets/gfx/orc/boss/dead.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 6
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0

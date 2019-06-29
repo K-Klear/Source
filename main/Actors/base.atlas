@@ -4,6 +4,9 @@ images {
 images {
   image: "/assets/gfx/bases/goblin.png"
 }
+images {
+  image: "/assets/gfx/bases/orc.png"
+}
 margin: 0
 extrude_borders: 2
 inner_padding: 0

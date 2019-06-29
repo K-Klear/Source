@@ -94,6 +94,28 @@ local M = {
 		speed = 15,
 		bounty = 10,
 	},
+	orc_boss = {
+		type = hash("orc_boss"),
+		health = 80,
+		attack = 15,
+		attack_speed = 0.5,
+		speed = 13,
+		bounty = 100,
+		orders = hash("build"),
+		build_time = 5,
+		spawn_time = 5,
+		spawn_limit = 30
+	},
+	orc_cultist = {
+		type = hash("orc_cultist"),
+		health = 60,
+		attack = 12,
+		attack_speed = 0.7,
+		speed = 13,
+		bounty = 80,
+		orders = hash("worship"),
+		workTime = 5
+	},
 }
 
 return M
