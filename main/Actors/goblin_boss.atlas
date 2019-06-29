@@ -30,6 +30,19 @@ animations {
   flip_horizontal: 0
   flip_vertical: 0
 }
+animations {
+  id: "build"
+  images {
+    image: "/assets/gfx/goblin/boss/dead.png"
+  }
+  images {
+    image: "/assets/gfx/goblin/boss/walk.png"
+  }
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 6
+  flip_horizontal: 0
+  flip_vertical: 0
+}
 margin: 0
 extrude_borders: 0
 inner_padding: 0

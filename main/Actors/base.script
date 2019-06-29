@@ -1,8 +1,10 @@
 go.property("type", hash("spider"))
 
 function init(self)
-	if self.type == hash("spider") then
+	if self.type == hash("spider_boss") then
 		sprite.play_flipbook("#sprite", "spider")
+	elseif self.type == hash("goblin_boss") then
+		sprite.play_flipbook("#sprite", "goblin")
 	end
 end
 

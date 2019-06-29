@@ -34,7 +34,7 @@ end
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
-	msg.post("@render:", "use_fixed_fit_projection")
+	--msg.post("@render:", "use_fixed_fit_projection")
 	P.name = ELD.elderize("Klear")
 	print(P.name)
 	for x = 1, 20 do

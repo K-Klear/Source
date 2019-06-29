@@ -1,6 +1,9 @@
 images {
   image: "/assets/gfx/bases/spider.png"
 }
+images {
+  image: "/assets/gfx/bases/goblin.png"
+}
 margin: 0
 extrude_borders: 2
 inner_padding: 0

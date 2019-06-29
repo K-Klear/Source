@@ -58,7 +58,7 @@ local build = {}
 
 function build.start(self)
 	sprite.play_flipbook("#"..self.sprite, "build")
-	self.base = factory.create("/world#spawn_base", go.get_position(), nil, {type = hash("spider")}, vmath.vector3(0, 0, 0))
+	self.base = factory.create("/world#spawn_base", go.get_position() + vmath.vector3(0, 0, -0.04), nil, {type = self.type}, vmath.vector3(0, 0, 0))
 	go.animate(self.base, "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(1, 1, 1), go.EASING_OUTCUBIC, self.build_time)
 	go.animate(self.base, "position.y", go.PLAYBACK_ONCE_FORWARD, go.get_position().y + 25, go.EASING_OUTCUBIC, self.build_time)
 	timer.delay(self.build_time, false, build.finish)
