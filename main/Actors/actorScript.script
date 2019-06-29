@@ -9,6 +9,8 @@ go.property("charLvl", 1)
 go.property("build_time", 1)
 go.property("spawn_time", 0)
 go.property("sprite", 1)
+go.property("spawn_limit", 30)
+go.property("workTime", 3)
 
 local STATS = require("main.Actors.actorStats")
 
@@ -16,12 +18,14 @@ local FADE_DELAY = 10
 local FADE_TIME = 3
 
 local GOLD = require("main/world/trackGold")
-
+local DWELLERS = require("main/trackDwellers")
 
 local idle
-local exitDown = {20, 620, 20, 620, 20, 620, 20}
+local leftExit = 20
+local rightExit = 620
+local exitDown = {leftExit, rightExit, leftExit, rightExit, leftExit, rightExit, leftExit}
 exitDown[0] = 620
-local exitUp = {620, 20, 620, 20, 620, 20, 620}
+local exitUp = {rightExit, leftExit, rightExit, leftExit, rightExit, leftExit, rightExit}
 exitUp[0] = -10
 local inn = 320
 
@@ -42,6 +46,7 @@ local unhash = {}
 unhash[hash("spider")] = "spider"
 unhash[hash("spider_boss")] = "spider_boss"
 unhash[hash("goblin")] = "goblin"
+unhash[hash("goblin_worker")] = "goblin_worker"
 unhash[hash("goblin_boss")] = "goblin_boss"
 unhash[hash("drake")] = "drake"
 
@@ -55,7 +60,20 @@ local function walk(self, X)
 end
 
 local function spawn(self)
-	msg.post("/world", "spawn", {type = self.type, pos = inn, level = self.level, guard = math.random() > 0.66})
+	if self.type == hash("spider_boss") then
+		table.insert(DWELLERS, {go = factory.create("/world#spawn_spider", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.spider), type = "spider", level = self.level})
+		if math.random() > 0.66 then msg.post(DWELLERS[#DWELLERS].go, "orders", {orders = hash("guard")}) end
+	elseif self.type == hash("goblin_boss") then
+		if math.random() > 0.5 then 
+			table.insert(DWELLERS, {go = factory.create("/world#spawn_goblin", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin), type = "goblin", level = self.level})
+		else
+			table.insert(DWELLERS, {go = factory.create("/world#spawn_goblin_worker", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin_worker), type = "goblin_worker", level = self.level})
+		end
+	end
+end
+
+local function createGold(position, amount)
+	table.insert(GOLD, factory.create("/world#spawn_gold", position + vmath.vector3(0, 0, 0.01), nil, {gold = amount}))
 end
 
 local build = {}
@@ -63,8 +81,8 @@ local build = {}
 function build.start(self)
 	sprite.play_flipbook("#"..self.sprite, "build")
 	self.base = factory.create("/world#spawn_base", go.get_position() + vmath.vector3(0, 0, -0.04), nil, {type = self.type}, vmath.vector3(0, 0, 0))
-	go.animate(self.base, "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(1, 1, 1), go.EASING_OUTCUBIC, self.build_time)
-	go.animate(self.base, "position.y", go.PLAYBACK_ONCE_FORWARD, go.get_position().y + 25, go.EASING_OUTCUBIC, self.build_time)
+	go.animate(self.base, "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(1, 1, 1), go.EASING_LINEAR, self.build_time)
+	go.animate(self.base, "position.y", go.PLAYBACK_ONCE_FORWARD, go.get_position().y + 25, go.EASING_LINEAR, self.build_time)
 	timer.delay(self.build_time, false, build.finish)
 end
 
@@ -91,6 +109,22 @@ local function levelUp(self)
 	end
 	idle(self)
 end
+
+local mine = {}
+
+function mine.start(self)
+	sprite.play_flipbook("#"..self.sprite, "attack")
+	timer.delay(self.workTime, false, mine.finish)
+end
+
+function mine.finish(self)
+	if self.alive then
+		self.mineTarget = nil
+		createGold(go.get_position(), math.random(1, 3))
+		idle(self)
+	end
+end
+
 
 function idle(self)
 	local currentX = go.get_position().x
@@ -158,6 +192,19 @@ function idle(self)
 		else
 			walk(self, inn)
 		end
+	elseif self.orders == hash("mine") then
+		if self.mineTarget then
+			if currentX == self.mineTarget then
+				mine.start(self)
+			else
+				walk(self, self.mineTarget)
+			end
+		else
+			self.mineTarget = currentX + math.random(-50, 50)
+			if self.mineTarget > rightExit then self.mineTarget = rightExit - 10 end
+			if self.mineTarget < leftExit then self.mineTarget = leftExit + 10 end
+			walk(self, self.mineTarget)
+		end
 	end
 end
 
@@ -190,10 +237,15 @@ local function die(self)
 	msg.post("#collisionobject", "disable")
 	if self.type == hash("hero") then
 		if self.gold > 0 then
-			table.insert(GOLD, factory.create("/world#spawn_gold", go.get_position() + vmath.vector3(0, 0, 0.01), nil, {gold = self.gold}))
+			createGold(go.get_position(), self.gold)
 		end
 	else
-		msg.post("/world", "removeDweller")
+		for key, val in ipairs(DWELLERS) do
+			if val.go == go.get_id() then
+				table.remove(DWELLERS, key)
+				break
+			end
+		end
 	end
 	if self.base then
 		msg.post(self.base, "die")

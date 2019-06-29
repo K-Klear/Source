@@ -5,11 +5,11 @@ local ELD = require("main.elderizer")
 local STATS = require("main.Actors.actorStats")
 local P = require("main.player")
 local houses = {}
-local dwellers = {}
 local heroes = {}
 local dwellersList = {"spider", "goblin", "drake"}
 
 local GOLD = require("main/world/trackGold")
+local DWELLERS = require("main/trackDwellers")
 local activeLevel = nil
 
 local currentAction = {action = "call", target = "spider"}
@@ -70,7 +70,7 @@ local dweller = {}
 
 function dweller.count(level, type)
 	local count = 0
-	for key, val in ipairs(dwellers) do
+	for key, val in ipairs(DWELLERS) do
 		if val.type == type and val.level == level then
 			count = count + 1
 		end
@@ -105,7 +105,7 @@ end
 function dweller.closest(type, level)
 	local closest
 	local distance = 1/0
-	for key, val in ipairs(dwellers) do
+	for key, val in ipairs(DWELLERS) do
 		if val.level == level and val.type == type and math.abs(go.get_position(val.go).x - go.get_position("cursorEffects").x) < distance then
 			closest = key; distance = math.abs(go.get_position(val.go).x - go.get_position("cursorEffects").x)
 		end
@@ -115,16 +115,16 @@ end
 
 function channel.done()
 	if currentAction.action == "call" then
-		table.insert(dwellers, {go = factory.create("#spawn_"..currentAction.target, vmath.vector3(20, 880 - activeLevel * 100, 0.65), nil, STATS[currentAction.target]), type = currentAction.target, level = activeLevel})
+		table.insert(DWELLERS, {go = factory.create("#spawn_"..currentAction.target, vmath.vector3(20, 880 - activeLevel * 100, 0.65), nil, STATS[currentAction.target]), type = currentAction.target, level = activeLevel})
 		P.essence = P.essence - STATS[currentAction.target].callCost
 		label.set_text("#essence", P.essence)
 	elseif currentAction.action == "empower" then
 		local target = dweller.empowerable(activeLevel)
 		if target then
 			local newBoss = dweller.closest(target, activeLevel)
-			local newGO = {go = factory.create("#spawn_"..target.."_boss", go.get_position(dwellers[newBoss].go), nil, STATS[target.."_boss"]), type = target.."_boss", level = activeLevel}
-			go.delete(dwellers[newBoss].go, true)
-			dwellers[newBoss] = newGO
+			local newGO = {go = factory.create("#spawn_"..target.."_boss", go.get_position(DWELLERS[newBoss].go), nil, STATS[target.."_boss"]), type = target.."_boss", level = activeLevel}
+			go.delete(DWELLERS[newBoss].go, true)
+			DWELLERS[newBoss] = newGO
 		end
 	end
 end
@@ -184,17 +184,5 @@ function on_message(self, message_id, message, sender)
 	if message_id == hash("setAction") then
 		particlefx.stop("cursorEffects#"..currentAction.action)
 		currentAction = {action = message.action, target = message.target}
-	elseif message_id == hash("removeDweller") then
-		for key, val in ipairs(dwellers) do
-			if val.go == sender.path then
-				table.remove(dwellers, key)
-				break
-			end
-		end
-	elseif message_id == hash("spawn") then
-		local type
-		if message.type == hash("spider_boss") then type = "spider" end
-		table.insert(dwellers, {go = factory.create("#spawn_"..type, vmath.vector3(message.pos, 880 - message.level * 100, 0.65), nil, STATS[type]), type = type, level = level})
-		if message.guard then msg.post(dwellers[#dwellers].go, "orders", {orders = hash("guard")}) end
 	end
 end

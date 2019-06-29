@@ -14,8 +14,8 @@ emitters {
     z: 0.0
     w: 1.0
   }
-  tile_source: "/main/Actors/heroes/lvlX.atlas"
-  animation: "idle"
+  tile_source: "/main/Actors/heroes/levelUP.atlas"
+  animation: "levelUP"
   material: "/builtins/materials/particlefx.material"
   blend_mode: BLEND_MODE_ADD
   particle_orientation: PARTICLE_ORIENTATION_DEFAULT

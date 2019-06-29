@@ -1,0 +1,6 @@
+images {
+  image: "/assets/gfx/heroes/levelUP.png"
+}
+margin: 1
+extrude_borders: 0
+inner_padding: 1

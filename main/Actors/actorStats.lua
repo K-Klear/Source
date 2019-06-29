@@ -27,7 +27,8 @@ local M = {
 		bounty = 50,
 		orders = hash("build"),
 		build_time = 4,
-		spawn_time = 5
+		spawn_time = 4,
+		spawn_limit = 60
 	},
 	peasant = {
 		health = 4,
@@ -47,6 +48,16 @@ local M = {
 		speed = 30,
 		bounty = 3,
 	},
+	goblin_worker = {
+		type = hash("goblin_worker"),
+		health = 5,
+		attack = 1,
+		attack_speed = 1.5,
+		speed = 30,
+		bounty = 2,
+		orders = hash("mine"),
+		workTime = 3
+	},
 	goblin_boss = {
 		type = hash("goblin_boss"),
 		health = 30,
@@ -55,7 +66,9 @@ local M = {
 		speed = 28,
 		bounty = 100,
 		orders = hash("build"),
-		build_time = 5
+		build_time = 5,
+		spawn_time = 5,
+		spawn_limit = 30
 	},
 	drake = {
 		type = hash("drake"),
