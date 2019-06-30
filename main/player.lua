@@ -5,6 +5,7 @@ local HEROES = require("main/trackHeroes")
 local M = {}
 local HEROSPAWNTIME = 10
 local timeToSpawn = 0
+local STARTINGESSENCE = 150
 
 M.fear = {}
 for x = 0, 7 do
@@ -18,8 +19,8 @@ M.fear.bonus = 0
 M.attraction = 0
 M.timeToHero = HEROSPAWNTIME
 
-M.maxEssence = 100
-M.essence = 100
+M.maxEssence = STARTINGESSENCE
+M.essence = STARTINGESSENCE
 
 M.essenceReturn = 0.5
 
@@ -82,5 +83,11 @@ function M.updateFear()
 		M.updateEssence()
 	end
 end
+
+function M.endgame(level)
+	print(HEROLEVELS[level].XP, M.essence - STARTINGESSENCE)
+	os.exit()
+end
+
 
 return M

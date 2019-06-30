@@ -11,6 +11,7 @@ go.property("spawn_time", 0)
 go.property("sprite", 1)
 go.property("spawn_limit", 30)
 go.property("workTime", 3)
+go.property("spawn_limit_worker", 10)
 
 local STATS = require("main.Actors.actorStats")
 local P = require("main.player")
@@ -52,18 +53,40 @@ local function walk(self, X)
 	self.action = hash("walk")
 end
 
+function dwellerCount(level, type)
+	local count = 0
+	for key, val in ipairs(DWELLERS[level]) do
+		if val.type == type then
+			count = count + 1
+		end
+	end
+	return count
+end
+
 local function spawn(self)
 	if self.type == hash("spider_boss") then
-		table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_spider", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.spider), type = "spider"})
-		if math.random() > 0.66 then msg.post(DWELLERS[#DWELLERS].go, "orders", {orders = hash("guard")}) end
+		if dwellerCount(self.level, "spider") < self.spawn_limit then
+			table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_spider", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.spider), type = "spider"})
+			if math.random() > 0.66 then msg.post(DWELLERS[#DWELLERS].go, "orders", {orders = hash("guard")}) end
+		end
 	elseif self.type == hash("goblin_boss") then
-		if math.random() > 0.3 then 
-			table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_goblin", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin), type = "goblin"})
+		if math.random() > 0.3 then
+			if dwellerCount(self.level, "goblin") < self.spawn_limit then
+				table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_goblin", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin), type = "goblin"})
+			elseif dwellerCount(self.level, "goblin_worker") < self.spawn_limit_worker then
+				table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_goblin_worker", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin_worker), type = "goblin_worker"})
+			end
 		else
-			table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_goblin_worker", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin_worker), type = "goblin_worker"})
+			if dwellerCount(self.level, "goblin_worker") < self.spawn_limit_worker then
+				table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_goblin_worker", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin_worker), type = "goblin_worker"})
+			elseif dwellerCount(self.level, "goblin") < self.spawn_limit then
+				table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_goblin", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin), type = "goblin"})
+			end
 		end
 	elseif self.type == hash("orc_boss") then
-		table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_orc_cultist", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.orc_cultist), type = "orc_cultist"})
+		if dwellerCount(self.level, "orc_cultist") < self.spawn_limit_worker then
+			table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_orc_cultist", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.orc_cultist), type = "orc_cultist"})
+		end
 	end
 end
 
@@ -167,6 +190,28 @@ local function reportFear(self)
 	P.updateFear()
 end
 
+local worship = {}
+
+function worship.start(self)
+	sprite.play_flipbook("#"..self.sprite, "attack")
+	self.action = "worship"
+	timer.delay(self.workTime, false, worship.finish)
+end
+
+function worship.finish(self)
+	if self.alive then
+		P.essence = P.essence + (dwellerCount(self.level, "orc_cultist") * 3)
+		P.updateEssence()
+		if #self.target > 0 then
+			fight(self)
+		else
+			self.action = "idle"
+			idle(self)
+		end
+	end
+end
+
+
 
 function idle(self)
 	local currentX = go.get_position().x
@@ -178,13 +223,17 @@ function idle(self)
 		end
 	elseif self.orders == hash("explore") then
 		if currentX == exitDown[self.level] then
-			self.level = self.level + 1
-			local pos = go.get_position()
-			pos.y = pos.y - 100
-			pos.x = exitUp[self.level]
-			go.set_position(pos)
-			walk(self, exitDown[self.level])
-			reportFear(self)
+			if self.level == 7 then
+				P.endgame(self.charLvl)
+			else
+				self.level = self.level + 1
+				local pos = go.get_position()
+				pos.y = pos.y - 100
+				pos.x = exitUp[self.level]
+				go.set_position(pos)
+				walk(self, exitDown[self.level])
+				reportFear(self)
+			end
 		else
 			walk(self, exitDown[self.level])
 		end
@@ -258,8 +307,12 @@ function idle(self)
 			walk(self, self.mineTarget)
 		end
 	elseif self.orders == hash("worship") then
-		self.orders = hash("guard")
-		idle(self)
+		if self.worshipSpot and currentX == self.worshipSpot then
+			worship.start(self)
+		else
+			self.worshipSpot = inn + math.random(-40, 40)
+			walk(self, self.worshipSpot)
+		end
 	end
 end
 
@@ -373,7 +426,7 @@ function on_message(self, message_id, message, sender)
 		if (message.own_group == hash("hero_range") and message.other_group == hash("dweller_body")) or (message.own_group == hash("dweller_range") and message.other_group == hash("hero_body")) then
 			if message.enter then
 				table.insert(self.target, message.other_id)
-				if self.action ~= hash("fight") and self.action ~= "build" then fight(self) end
+				if self.action ~= hash("fight") and self.action ~= "build" and self.action ~= "worship" then fight(self) end
 			else
 				for key, val in ipairs(self.target) do
 					if val == message.other_id then
