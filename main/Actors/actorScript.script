@@ -13,6 +13,9 @@ go.property("spawn_limit", 30)
 go.property("workTime", 3)
 
 local STATS = require("main.Actors.actorStats")
+local P = require("main.player")
+local HEROLEVELS = require("main/Actors/heroes/heroLevels")
+local HEROES = require("main/trackHeroes")
 
 local FADE_DELAY = 10
 local FADE_TIME = 3
@@ -28,18 +31,6 @@ exitDown[0] = 620
 local exitUp = {rightExit, leftExit, rightExit, leftExit, rightExit, leftExit, rightExit}
 exitUp[0] = -10
 local inn = 320
-
-local upgrades = {}
-upgrades[1] = {}
-upgrades[1].XP = 6.6
-upgrades[1].HP = 10
-upgrades[1].ATK = 3
-for lvl = 2, 100 do
-	upgrades[lvl] = {}
-	upgrades[lvl].XP = math.ceil(upgrades[lvl - 1].XP * 1.05)
-	upgrades[lvl].HP = math.ceil(upgrades[lvl - 1].HP * 1.2)
-	upgrades[lvl].ATK = upgrades[lvl - 1].ATK + math.floor(lvl / 4)
-end
 
 
 local unhash = {}
@@ -63,16 +54,16 @@ end
 
 local function spawn(self)
 	if self.type == hash("spider_boss") then
-		table.insert(DWELLERS, {go = factory.create("/world#spawn_spider", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.spider), type = "spider", level = self.level})
+		table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_spider", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.spider), type = "spider"})
 		if math.random() > 0.66 then msg.post(DWELLERS[#DWELLERS].go, "orders", {orders = hash("guard")}) end
 	elseif self.type == hash("goblin_boss") then
 		if math.random() > 0.3 then 
-			table.insert(DWELLERS, {go = factory.create("/world#spawn_goblin", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin), type = "goblin", level = self.level})
+			table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_goblin", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin), type = "goblin"})
 		else
-			table.insert(DWELLERS, {go = factory.create("/world#spawn_goblin_worker", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin_worker), type = "goblin_worker", level = self.level})
+			table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_goblin_worker", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.goblin_worker), type = "goblin_worker"})
 		end
 	elseif self.type == hash("orc_boss") then
-		table.insert(DWELLERS, {go = factory.create("/world#spawn_orc_cultist", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.orc_cultist), type = "orc_cultist", level = self.level})
+		table.insert(DWELLERS[self.level], {go = factory.create("/world#spawn_orc_cultist", vmath.vector3(inn, 880 - self.level * 100, 0.65), nil, STATS.orc_cultist), type = "orc_cultist"})
 	end
 end
 
@@ -103,14 +94,20 @@ end
 
 local function levelUp(self)
 	self.charLvl = self.charLvl + 1
-	self.gold = self.gold - upgrades[self.charLvl].XP
-	self.maxHealth = upgrades[self.charLvl].HP
-	self.attack = upgrades[self.charLvl].ATK
+	self.maxHealth = HEROLEVELS[self.charLvl].HP
+	self.health = self.maxHealth
+	self.attack = HEROLEVELS[self.charLvl].ATK
 	particlefx.play("#levelUp")
 	if self.charLvl < 11 then
 		msg.post("#"..self.sprite, "disable")
 		self.sprite = self.sprite + 1
 		msg.post("#"..self.sprite, "enable")
+	end
+	for key, val in ipairs(HEROES) do
+		if val.go == go.get_id() then
+			HEROES[key].level = self.charLvl
+			break
+		end
 	end
 	idle(self)
 end
@@ -141,6 +138,25 @@ function mine.finish(self)
 	end
 end
 
+local function countBounties(level)
+	local bounty = 0
+	for key, val in ipairs(DWELLERS[level]) do
+		bounty = bounty + STATS[val.type].bounty
+	end
+	return bounty
+end
+
+local function reportFear(self)
+	for lvl = self.level, 1, -1 do
+		P.fear[lvl] = countBounties(lvl)
+	end
+	if self.level < 7 then
+		local fear = math.ceil(countBounties(self.level + 1) / 2)
+		if fear > P.fear[self.level + 1] then P.fear[self.level + 1] = fear end
+	end
+	P.updateFear()
+end
+
 
 function idle(self)
 	local currentX = go.get_position().x
@@ -157,6 +173,7 @@ function idle(self)
 			pos.y = pos.y - 100
 			go.set_position(pos)
 			walk(self, exitDown[self.level])
+			reportFear(self)
 		else
 			walk(self, exitDown[self.level])
 		end
@@ -183,6 +200,12 @@ function idle(self)
 				walk(self, exitUp[self.level])
 			end
 		elseif currentX == exitUp[self.level] and self.level == 0 then
+			for key, val in ipairs(HEROES) do
+				if val.go == go.get_id() then
+					table.remove(HEROES, key)
+					break
+				end
+			end
 			go.delete()
 		else
 			walk(self, exitUp[self.level])
@@ -193,8 +216,9 @@ function idle(self)
 				self.gold = self.gold + STATS[unhash[key]].bounty * val
 				self.kills[key] = 0
 			end
-			while self.gold > upgrades[self.charLvl + 1].XP do
+			while self.gold > HEROLEVELS[self.charLvl + 1].XP do
 				levelUp(self)
+				self.gold = self.gold - HEROLEVELS[self.charLvl].XP
 			end
 			self.health = self.maxHealth
 			self.orders = hash("explore")
@@ -258,10 +282,17 @@ local function die(self)
 		if self.gold > 0 then
 			createGold(go.get_position(), self.gold)
 		end
-	else
-		for key, val in ipairs(DWELLERS) do
+		P.heroDeath(self.charLvl)
+		for key, val in ipairs(HEROES) do
 			if val.go == go.get_id() then
-				table.remove(DWELLERS, key)
+				table.remove(HEROES, key)
+				break
+			end
+		end
+	else
+		for key, val in ipairs(DWELLERS[self.level]) do
+			if val.go == go.get_id() then
+				table.remove(DWELLERS[self.level], key)
 				break
 			end
 		end
@@ -346,5 +377,9 @@ function on_message(self, message_id, message, sender)
 		self.orders = message.orders; idle(self)
 	elseif message_id == hash("getGold") then
 		self.gold = self.gold + message.gold
+	elseif message_id == hash("levelUp") then
+		for x = 1, message.level do
+			levelUp(self)
+		end
 	end
 end

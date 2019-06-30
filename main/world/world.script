@@ -5,11 +5,11 @@ local ELD = require("main.elderizer")
 local STATS = require("main.Actors.actorStats")
 local P = require("main.player")
 local houses = {}
-local heroes = {}
 local dwellersList = {"spider", "goblin", "drake", "orc"}
 
 local GOLD = require("main/world/trackGold")
 local DWELLERS = require("main/trackDwellers")
+local HEROES = require("main/trackHeroes")
 local activeLevel = nil
 
 local currentAction = {action = "call", target = "spider"}
@@ -29,7 +29,7 @@ end
 local hero = {}
 
 function hero.spawn(level)
-	table.insert(heroes, factory.create("#spawn_hero", vmath.vector3(-10, 880, 0.65), nil, STATS.hero))
+	table.insert(HEROES, {go = factory.create("#spawn_hero", vmath.vector3(-10, 880, 0.65), nil, STATS.hero), level = 1})
 end
 
 function init(self)
@@ -40,7 +40,8 @@ function init(self)
 	for x = 1, 20 do
 		addCottage()
 	end
-	timer.delay(1, true, function() P.essence = P.essence + P.rechargeRate; label.set_text("#essence", P.essence) end)
+	--timer.delay(1, true, function() P.essence = P.essence + P.rechargeRate; label.set_text("#essence", P.essence) end)
+	
 	-- create caves
 	for y = 0, 6 do
 		factory.create("#caveSpawner", vmath.vector3(50, 800 - y * 100, 0.6), nil, {type = 1})
@@ -49,6 +50,7 @@ function init(self)
 			factory.create("#caveSpawner", vmath.vector3(155 + x * 110, 800 - y * 100, 0.6), nil)
 		end
 	end
+	timer.delay(1, true, P.time)
 end
 
 local function getLevel(y)
@@ -70,8 +72,8 @@ local dweller = {}
 
 function dweller.count(level, type)
 	local count = 0
-	for key, val in ipairs(DWELLERS) do
-		if val.type == type and val.level == level then
+	for key, val in ipairs(DWELLERS[level]) do
+		if val.type == type then
 			count = count + 1
 		end
 	end
@@ -94,8 +96,9 @@ function dweller.empowerable(level)
 	local bestCount = 0
 	local best
 	for key, val in ipairs(dwellersList) do
+		if dweller.count(level, val.."_boss") > 0 then return end
 		local count = dweller.count(level, val)
-		if count > bestCount and dweller.count(level, val.."_boss") == 0 then
+		if count > bestCount then
 			best = val; bestCount = count
 		end
 	end
@@ -105,8 +108,8 @@ end
 function dweller.closest(type, level)
 	local closest
 	local distance = 1/0
-	for key, val in ipairs(DWELLERS) do
-		if val.level == level and val.type == type and math.abs(go.get_position(val.go).x - go.get_position("cursorEffects").x) < distance then
+	for key, val in ipairs(DWELLERS[level]) do
+		if val.type == type and math.abs(go.get_position(val.go).x - go.get_position("cursorEffects").x) < distance then
 			closest = key; distance = math.abs(go.get_position(val.go).x - go.get_position("cursorEffects").x)
 		end
 	end
@@ -115,16 +118,16 @@ end
 
 function channel.done()
 	if currentAction.action == "call" then
-		table.insert(DWELLERS, {go = factory.create("#spawn_"..currentAction.target, vmath.vector3(20, 880 - activeLevel * 100, 0.65), nil, STATS[currentAction.target]), type = currentAction.target, level = activeLevel})
+		table.insert(DWELLERS[activeLevel], {go = factory.create("#spawn_"..currentAction.target, vmath.vector3(20, 880 - activeLevel * 100, 0.65), nil, STATS[currentAction.target]), type = currentAction.target})
 		P.essence = P.essence - STATS[currentAction.target].callCost
 		label.set_text("#essence", P.essence)
 	elseif currentAction.action == "empower" then
 		local target = dweller.empowerable(activeLevel)
 		if target then
 			local newBoss = dweller.closest(target, activeLevel)
-			local newGO = {go = factory.create("#spawn_"..target.."_boss", go.get_position(DWELLERS[newBoss].go), nil, STATS[target.."_boss"]), type = target.."_boss", level = activeLevel}
-			go.delete(DWELLERS[newBoss].go, true)
-			DWELLERS[newBoss] = newGO
+			local newGO = {go = factory.create("#spawn_"..target.."_boss", go.get_position(DWELLERS[activeLevel][newBoss].go), nil, STATS[target.."_boss"]), type = target.."_boss"}
+			go.delete(DWELLERS[activeLevel][newBoss].go, true)
+			DWELLERS[activeLevel][newBoss] = newGO
 		end
 	end
 end

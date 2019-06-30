@@ -52,4 +52,12 @@ Things I had to cut:
 - Double (or triple) cave space by allowing actors to walk on the background
 - Making it possible to descend to a lower level without going through *every single enemy* on the current level
 - Using gold dropped in the dungeon to create cursed items to help heroes while corrupting them at the same time
-- Raising undead 
+- Raising undead
+- Replacing some remaining placeholders with actual graphics
+	- Also adding tiny animations to everything
+- Sound playing only from cave level the mouse is currently pointing at
+- Restrictions on where and when certain dwellers can be placed (gold, depth etc.)
+- DRAGON
+- Using the lore text in any kind of menaingful way. Maybe it will fit on the title screen, piece by random piece
+- Advancement from nameless to formless to awakened
+- Game balance =(
