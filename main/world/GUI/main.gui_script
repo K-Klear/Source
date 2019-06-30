@@ -10,15 +10,17 @@ function init(self)
 	buttons.call = gui.new_box_node(vmath.vector3(110, 82, 0), vmath.vector3(64, 64, 0))
 	gui.set_texture(buttons.call, "icons")
 	gui.play_flipbook(buttons.call, "call")
-	buttons.empower = gui.new_box_node(vmath.vector3(250, 82, 0), vmath.vector3(64, 64, 0))
+	buttons.empower = gui.new_box_node(vmath.vector3(530, 82, 0), vmath.vector3(64, 64, 0))
 	gui.set_texture(buttons.empower, "icons")
 	gui.play_flipbook(buttons.empower, "empower")
+	--[[
 	buttons.agitate = gui.new_box_node(vmath.vector3(390, 82, 0), vmath.vector3(64, 64, 0))
 	gui.set_texture(buttons.agitate, "icons")
 	gui.play_flipbook(buttons.agitate, "agitate")
 	buttons.corrupt = gui.new_box_node(vmath.vector3(530, 82, 0), vmath.vector3(64, 64, 0))
 	gui.set_texture(buttons.corrupt, "icons")
 	gui.play_flipbook(buttons.corrupt, "corrupt")
+	--]]
 	dialog.callPick = {
 		frame = gui.new_box_node(vmath.vector3(320, 480, 0), vmath.vector3(256, 256, 0)),
 		btn = {

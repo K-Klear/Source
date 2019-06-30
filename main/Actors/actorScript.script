@@ -24,10 +24,10 @@ local GOLD = require("main/world/trackGold")
 local DWELLERS = require("main/trackDwellers")
 
 local idle
-local leftExit = 20
-local rightExit = 620
+local leftExit = 15
+local rightExit = 625
 local exitDown = {leftExit, rightExit, leftExit, rightExit, leftExit, rightExit, leftExit}
-exitDown[0] = 620
+exitDown[0] = 500
 local exitUp = {rightExit, leftExit, rightExit, leftExit, rightExit, leftExit, rightExit}
 exitUp[0] = -10
 local inn = 320
@@ -75,6 +75,7 @@ end
 local build = {}
 
 function build.start(self)
+	self.action = "build"
 	sprite.play_flipbook("#"..self.sprite, "build")
 	self.base = factory.create("/world#spawn_base", go.get_position() + vmath.vector3(0, 0, -0.04), nil, {type = self.type}, vmath.vector3(0, 0, 0))
 	go.animate(self.base, "scale", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(1, 1, 1), go.EASING_LINEAR, self.build_time)
@@ -82,31 +83,40 @@ function build.start(self)
 	timer.delay(self.build_time, false, build.finish)
 end
 
+local fight
+
 function build.finish(self)
 	self.orders = hash("guard")
 	if self.alive then
 		if self.spawn_time > 0 then
 			self.spawnTimer = timer.delay(self.spawn_time, true, spawn)
 		end
-		idle(self)
+		if #self.target > 0 then
+			fight(self)
+		else
+			self.action = "idle"
+			idle(self)
+		end
 	end
 end
 
 local function levelUp(self)
-	self.charLvl = self.charLvl + 1
-	self.maxHealth = HEROLEVELS[self.charLvl].HP
-	self.health = self.maxHealth
-	self.attack = HEROLEVELS[self.charLvl].ATK
-	particlefx.play("#levelUp")
-	if self.charLvl < 11 then
-		msg.post("#"..self.sprite, "disable")
-		self.sprite = self.sprite + 1
-		msg.post("#"..self.sprite, "enable")
-	end
-	for key, val in ipairs(HEROES) do
-		if val.go == go.get_id() then
-			HEROES[key].level = self.charLvl
-			break
+	if self.charLvl < 20 then
+		if self.charLvl % 2 == 0 then
+			msg.post("#"..self.sprite, "disable")
+			self.sprite = self.sprite + 1
+			msg.post("#"..self.sprite, "enable")
+		end
+		self.charLvl = self.charLvl + 1
+		self.maxHealth = HEROLEVELS[self.charLvl].HP
+		self.health = self.maxHealth
+		self.attack = HEROLEVELS[self.charLvl].ATK
+		particlefx.play("#levelUp")
+		for key, val in ipairs(HEROES) do
+			if val.go == go.get_id() then
+				HEROES[key].level = self.charLvl
+				break
+			end
 		end
 	end
 	idle(self)
@@ -171,6 +181,7 @@ function idle(self)
 			self.level = self.level + 1
 			local pos = go.get_position()
 			pos.y = pos.y - 100
+			pos.x = exitUp[self.level]
 			go.set_position(pos)
 			walk(self, exitDown[self.level])
 			reportFear(self)
@@ -192,6 +203,7 @@ function idle(self)
 			self.level = self.level - 1
 			local pos = go.get_position()
 			pos.y = pos.y + 100
+			pos.x = exitDown[self.level]
 			go.set_position(pos)
 			if self.level == 0 then
 				self.orders = hash("rest")
@@ -261,7 +273,7 @@ local function attack(self)
 	end
 end
 
-local function fight(self)
+function fight(self)
 	go.cancel_animations(go.get_id(), "position")
 	if go.get_position(self.target[1]).x > go.get_position().x then
 		sprite.set_hflip("#"..self.sprite, false)
@@ -290,6 +302,25 @@ local function die(self)
 			end
 		end
 	else
+		if self.type == hash("spider") or self.type == hash("goblin") or self.type == hash("drake") or self.type == hash("orc") then
+			P.essence = math.min(P.essence + (STATS[unhash[self.type]].callCost * P.essenceReturn), P.maxEssence)
+			P.updateEssence()
+		elseif self.type == hash("spider_boss") then
+			P.essence = math.min(P.essence + (STATS.spider.empowerCost * P.essenceReturn), P.maxEssence)
+			P.updateEssence()
+		elseif self.type == hash("goblin_boss") then
+			P.essence = math.min(P.essence + (STATS.goblin.empowerCost * P.essenceReturn), P.maxEssence)
+			P.updateEssence()
+		elseif self.type == hash("drake_boss") then
+			P.essence = math.min(P.essence + (STATS.drake.empowerCost * P.essenceReturn), P.maxEssence)
+			P.updateEssence()
+		elseif self.type == hash("orc_boss") then
+			P.essence = math.min(P.essence + (STATS.orc.empowerCost * P.essenceReturn), P.maxEssence)
+			P.updateEssence()
+		elseif self.type == hash("orc_cultist") then
+			P.essence = math.min(P.essence + (STATS.orc.empowerCost * P.essenceReturn), P.maxEssence)
+			P.updateEssence()
+		end
 		for key, val in ipairs(DWELLERS[self.level]) do
 			if val.go == go.get_id() then
 				table.remove(DWELLERS[self.level], key)
@@ -342,7 +373,7 @@ function on_message(self, message_id, message, sender)
 		if (message.own_group == hash("hero_range") and message.other_group == hash("dweller_body")) or (message.own_group == hash("dweller_range") and message.other_group == hash("hero_body")) then
 			if message.enter then
 				table.insert(self.target, message.other_id)
-				if self.action ~= hash("fight") then fight(self) end
+				if self.action ~= hash("fight") and self.action ~= "build" then fight(self) end
 			else
 				for key, val in ipairs(self.target) do
 					if val == message.other_id then
@@ -378,6 +409,7 @@ function on_message(self, message_id, message, sender)
 	elseif message_id == hash("getGold") then
 		self.gold = self.gold + message.gold
 	elseif message_id == hash("levelUp") then
+		self.gold = math.random(1, HEROLEVELS[message.level + 1].XP)
 		for x = 1, message.level do
 			levelUp(self)
 		end

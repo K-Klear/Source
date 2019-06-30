@@ -61,3 +61,7 @@ Things I had to cut:
 - Using the lore text in any kind of menaingful way. Maybe it will fit on the title screen, piece by random piece
 - Advancement from nameless to formless to awakened
 - Game balance =(
+- Agitate / corrupt actions
+- Town portal for heroes to speed things up
+- Death animations, was looking forward to fire death in particular
+- Android build

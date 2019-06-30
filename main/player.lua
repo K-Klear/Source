@@ -19,8 +19,14 @@ M.attraction = 0
 M.timeToHero = HEROSPAWNTIME
 
 M.maxEssence = 100
-M.essence = 1
-M.rechargeRate = 0
+M.essence = 100
+
+M.essenceReturn = 0.5
+
+function M.updateEssence()
+	label.set_text("/world#essence", math.floor(M.essence))-- * 10) / 10)
+	label.set_text("/world#essenceMax", math.floor(M.maxEssence))
+end
 
 local function callHero()
 	local power = 0
@@ -55,6 +61,8 @@ function M.time()
 		callHero()
 		timeToSpawn = 0
 	end
+	if M.essence < M.maxEssence then M.essence = math.min(M.essence + (M.maxEssence / 50), M.maxEssence) end
+	M.updateEssence()
 end
 
 function M.heroDeath(level)
@@ -68,7 +76,11 @@ function M.updateFear()
 		M.fear.total = M.fear.total + val
 	end
 	M.fear.total = M.fear.total + M.fear.bonus
-	M.fear.record = math.max(M.fear.record, M.fear.total)
+	if M.fear.total > M.fear.record then
+		M.maxEssence = M.maxEssence + M.fear.total - M.fear.record
+		M.fear.record = M.fear.total
+		M.updateEssence()
+	end
 end
 
 return M
