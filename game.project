@@ -1,6 +1,6 @@
 [project]
 title = Source of Evil
-version = 0.0
+version = 0.9
 
 [bootstrap]
 main_collection = /main/world/world.collectionc

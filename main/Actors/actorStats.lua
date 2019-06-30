@@ -3,7 +3,7 @@ local M = {
 		health = 10,
 		attack = 3,
 		attack_speed = 1,
-		speed = 500,
+		speed = 50,
 		orders = hash("explore")
 	},
 	spider = {
