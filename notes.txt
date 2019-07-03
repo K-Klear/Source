@@ -14,6 +14,8 @@ Credits:
 
 GFX:
 Gold icons: https://opengameart.org/content/gold-treasure-icons
+FONT:
+https://www.1001freefonts.com/devil-s-reject.font
 SFX
 Pickaxe: https://freesound.org/people/Benboncan/sounds/71823/
 Coins: https://freesound.org/people/PetervH/sounds/324760/
@@ -64,4 +66,6 @@ Things I had to cut:
 - Agitate / corrupt actions
 - Town portal for heroes to speed things up
 - Death animations, was looking forward to fire death in particular
+- More than two sounds
 - Android build
+- "Elderizer" turning player's name into that of an elder god. It is actually in the game, but not used in any way.

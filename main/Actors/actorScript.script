@@ -134,6 +134,7 @@ local function levelUp(self)
 		self.maxHealth = HEROLEVELS[self.charLvl].HP
 		self.health = self.maxHealth
 		self.attack = HEROLEVELS[self.charLvl].ATK
+		self.attack_speed = HEROLEVELS[self.charLvl].attackSpeed
 		particlefx.play("#levelUp")
 		for key, val in ipairs(HEROES) do
 			if val.go == go.get_id() then

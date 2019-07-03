@@ -85,13 +85,8 @@ function M.updateFear()
 end
 
 
-
 function M.endgame(level)
-	if not gameEnded then
-		gameEnded = true
-		local victory = HEROLEVELS[level].XP < (M.essence - STARTINGESSENCE)
-		msg.post("/GUI", "gameOver", {victory = victory})
-	end
+	msg.post("loader:/go", "endGame", {hero = HEROLEVELS[level].XP, essence = M.essence - STARTINGESSENCE})
 end
 
 

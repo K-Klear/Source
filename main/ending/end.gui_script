@@ -1,0 +1,25 @@
+local ELD = require("main.elderizer")
+local text1
+local text2
+local score
+
+function init(self)
+	text1 = gui.get_node("text1")
+	text2 = gui.get_node("text2")
+	score = gui.get_node("score")
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("ending") then
+		local name = ELD.elderize(message.name)
+		local victory = message.essence > message.hero
+		gui.set_text(text1, "Deep beneath the village, "..name.." lurked. A hero fought his way through the bowels of the earth seeking to end this evil once and for all.")
+		if victory then
+			gui.set_text(text2, "However, the evil overpowered his feeble mind. Taking possession of his body, it is now free to roam the surface world and plunge it into darkness.")
+			gui.set_text(score, "Score: "..message.essence - message.hero)
+		else
+			gui.set_text(text2, "Resisting the evil presence, the hero proved victorious and forever banished it from this realm.")
+			gui.set_enabled(score, false)
+		end
+	end
+end

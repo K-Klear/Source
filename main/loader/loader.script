@@ -1,0 +1,35 @@
+math.randomseed(os.time())
+math.random(); math.random(); math.random()
+
+function init(self)
+	msg.post("#loader", "acquire_input_focus")
+	msg.post("#proxyMenu", "load")
+end
+
+function on_message(self, message_id, message, sender)
+	local urlMenu = msg.url("loader", "/go", "proxyMenu")
+	local urlWorld = msg.url("loader", "/go", "proxyWorld")
+	local urlEnd = msg.url("loader", "/go", "proxyEnd")
+	if message_id == hash("proxy_loaded") then
+		if sender == urlMenu then
+			msg.post(sender, "init")
+			msg.post(sender, "enable")
+		elseif sender == urlWorld then
+			msg.post(sender, "init")
+			msg.post(sender, "enable")
+			msg.post("#proxyMenu", "unload")
+		elseif sender == urlEnd then
+			msg.post(sender, "init")
+			msg.post(sender, "enable")
+			msg.post("end:/go", "ending", {name = self.name, hero = self.hero, essence = self.essence})
+			msg.post("#proxyWorld", "unload")
+		end
+	elseif message_id == hash("startGame") then
+		self.name = message.name
+		msg.post("#proxyWorld", "load")
+	elseif message_id == hash("endGame") then
+		self.hero = message.hero
+		self.essence = message.essence
+		msg.post("#proxyEnd", "load")
+	end
+end
